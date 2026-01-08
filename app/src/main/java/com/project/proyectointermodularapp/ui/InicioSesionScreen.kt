@@ -23,6 +23,7 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.project.proyectointermodularapp.R
+import com.project.proyectointermodularapp.ui.theme.Grey
 
 @Composable
 fun LoginScreen(
@@ -78,6 +79,11 @@ fun LoginScreen(
         ) {
             Text("Iniciar sesión")
         }
+        Text(
+            color = Grey,
+            modifier = Modifier.padding(5.dp),
+            text = "¿No tienes una cuenta? Registrate."
+        )
     }
 }
 
