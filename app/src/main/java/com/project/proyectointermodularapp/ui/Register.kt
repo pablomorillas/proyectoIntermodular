@@ -16,6 +16,8 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.project.proyectointermodularapp.R
+import com.project.proyectointermodularapp.ui.theme.AlmosWhite
+import com.project.proyectointermodularapp.ui.theme.Red
 
 @Composable
 fun RegisterScreen() {
@@ -30,26 +32,36 @@ fun RegisterScreen() {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(24.dp)
+            .padding(horizontal = 24.dp)
             .verticalScroll(rememberScrollState()),
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
     ) {
 
-        // Logo de la aplicación
         Image(
-            painter = painterResource(id = R.drawable.logo_place_holder),
+            painter = painterResource(id = R.drawable.image_place_holder),
             contentDescription = "Logo",
-            modifier = Modifier.padding(bottom = 30.dp)
+            modifier = Modifier
+                .size(140.dp)
+                .padding(bottom = 24.dp)
+        )
+
+        Text(
+            text = "Crear cuenta",
+            style = MaterialTheme.typography.headlineLarge,
+            color = Red,
+            modifier = Modifier.padding(bottom = 32.dp)
         )
 
         OutlinedTextField(
             value = nombre,
             onValueChange = { nombre = it },
             label = { Text("Nombre") },
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
+            singleLine = true
         )
 
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(14.dp))
 
         OutlinedTextField(
             value = email,
@@ -59,7 +71,7 @@ fun RegisterScreen() {
             singleLine = true
         )
 
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(14.dp))
 
         OutlinedTextField(
             value = password,
@@ -70,7 +82,7 @@ fun RegisterScreen() {
             singleLine = true
         )
 
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(14.dp))
 
         OutlinedTextField(
             value = confirmPassword,
@@ -81,7 +93,7 @@ fun RegisterScreen() {
             singleLine = true
         )
 
-        Spacer(modifier = Modifier.height(24.dp))
+        Spacer(modifier = Modifier.height(32.dp))
 
         Button(
             onClick = {
@@ -97,10 +109,21 @@ fun RegisterScreen() {
 
                 Toast.makeText(context, "Registro válido", Toast.LENGTH_SHORT).show()
             },
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(52.dp),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = Red,
+                contentColor = AlmosWhite
+            )
         ) {
-            Text("Registrarse")
+            Text(
+                text = "Registrarse",
+                style = MaterialTheme.typography.titleMedium
+            )
         }
+
+        Spacer(modifier = Modifier.height(24.dp))
     }
 }
 

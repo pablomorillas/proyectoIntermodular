@@ -1,5 +1,4 @@
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -8,6 +7,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
@@ -23,7 +23,9 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.project.proyectointermodularapp.R
+import com.project.proyectointermodularapp.ui.theme.AlmosWhite
 import com.project.proyectointermodularapp.ui.theme.Grey
+import com.project.proyectointermodularapp.ui.theme.Red
 
 @Composable
 fun LoginScreen(
@@ -41,7 +43,7 @@ fun LoginScreen(
     ) {
 
         Image(
-            painter = painterResource(id = R.drawable.logo_place_holder),
+            painter = painterResource(id = R.drawable.image_place_holder),
             contentDescription = "Logo",
             modifier = Modifier.padding(bottom = 30.dp)
         )
@@ -75,7 +77,12 @@ fun LoginScreen(
 
         Button(
             onClick = { onLoginClick(username, password) },
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = Red,
+                contentColor = AlmosWhite,
+                disabledContainerColor = Grey
+            )
         ) {
             Text("Iniciar sesión")
         }
