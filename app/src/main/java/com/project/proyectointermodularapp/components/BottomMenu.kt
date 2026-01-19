@@ -31,7 +31,7 @@ import com.project.proyectointermodularapp.R
 @Composable
 fun BottomMenu(
     selectedIndex: Int,
-    onItemSelected: @Composable (Int) -> Unit
+    onItemSelected: (Int) -> Unit
 ) {
     val customRed = Color(0xFFC61313)
     val customWhite = Color.White

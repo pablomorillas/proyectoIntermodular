@@ -30,7 +30,9 @@ class MainActivity : ComponentActivity() {
         setContent {
             ProyectoIntermodularAppTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    BottomMenu() { }
+                    BottomMenu(
+                        selectedIndex = 0
+                    ) { }
                 }
             }
         }

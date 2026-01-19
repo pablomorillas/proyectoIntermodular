@@ -1,4 +1,4 @@
-package com.project.proyectointermodularapp.ui
+package com.project.proyectointermodularapp.ui.screen
 
 import android.util.Patterns
 import android.widget.Toast
