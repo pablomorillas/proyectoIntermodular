@@ -17,6 +17,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.project.proyectointermodularapp.R
 import com.project.proyectointermodularapp.ui.theme.AlmosWhite
+import com.project.proyectointermodularapp.ui.theme.Grey
 import com.project.proyectointermodularapp.ui.theme.Red
 
 @Composable
@@ -120,6 +121,20 @@ fun RegisterScreen() {
             Text(
                 text = "Registrarse",
                 style = MaterialTheme.typography.titleMedium
+            )
+        }
+
+        Row {
+
+            Text(
+                color = Grey,
+                modifier = Modifier.paddingFromBaseline(5.dp),
+                text = "¿No tienes una cuenta? "
+            )
+            Text(
+                color = Red,
+                modifier = Modifier.paddingFromBaseline(5.dp),
+                text = "Regístrate."
             )
         }
 
