@@ -1,3 +1,5 @@
+package com.project.proyectointermodularapp.ui.components
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -30,13 +32,12 @@ import com.project.proyectointermodularapp.R
 
 @Composable
 fun BottomMenu(
-    selectedIndex: Int,
+    selectedIndex: Int?,
     onItemSelected: (Int) -> Unit
 ) {
     val customRed = Color(0xFFC61313)
     val customWhite = Color.White
 
-    // Contenedor principal con fondo rojo para que cubra toda el área inferior
     Box(modifier = Modifier.background(customRed)) {
         Row(
             modifier = Modifier
