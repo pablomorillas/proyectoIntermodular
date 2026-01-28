@@ -1,6 +1,7 @@
 package com.project.proyectointermodularapp.data.repository
 
 import com.project.proyectointermodularapp.domain.model.ArticleModel
+import com.project.proyectointermodularapp.domain.model.CommentModel
 
 class FakeArticleRepository : ArticleRepository {
 
@@ -13,7 +14,24 @@ class FakeArticleRepository : ArticleRepository {
                 content = "Aprende a crear interfaces modernas y declarativas con Jetpack Compose.",
                 author = "Lucía Martínez",
                 date = "2024-01-12",
-                imageUrl = "https://picsum.photos/400/200?1"
+                imageUrl = "https://picsum.photos/400/200?1",
+                comments = listOf(
+                    CommentModel(
+                        id = 1,
+                        author = "Carlos",
+                        message = "Muy buen artículo 👏",
+                        date = "2024-01-13",
+                        replies = listOf(
+                            CommentModel(
+                                id = 2,
+                                author = "Lucía Martínez",
+                                message = "¡Gracias!",
+                                date = "2024-01-13"
+                            )
+                        )
+                    )
+                ),
+                responses = emptyList()
             ),
             ArticleModel(
                 id = 2,
@@ -21,7 +39,7 @@ class FakeArticleRepository : ArticleRepository {
                 content = "Organiza tu proyecto Android usando ViewModel, UiState y Repository.",
                 author = "Carlos Gómez",
                 date = "2024-01-15",
-                imageUrl = "https://picsum.photos/400/200?2"
+                imageUrl = "https://picsum.photos/400/200?2",
             ),
             ArticleModel(
                 id = 3,

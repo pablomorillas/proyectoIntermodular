@@ -32,4 +32,17 @@ class ArticleViewModel(
             }
         }
     }
+
+    /*private fun loadResponses(){
+        viewModelScope.launch {
+            try {
+                val responses = repository.getArticles()
+                _uiState.value = ArticleUiState(responses = responses)
+            } catch (e: Exception) {
+                _uiState.value = ArticleUiState(
+                    error = "No se pudieron cargar las respuestas"
+                )
+            }
+        }
+    }*/
 }

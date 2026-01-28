@@ -6,5 +6,7 @@ data class ArticleModel(
     val content: String,
     val author: String,
     val date: String,
-    val imageUrl: String
+    val imageUrl: String,
+    val responses: List<String> = emptyList(),
+    val comments: List<CommentModel> = emptyList()
 )

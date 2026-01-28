@@ -12,6 +12,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import androidx.compose.ui.tooling.preview.Preview
+import com.project.proyectointermodularapp.domain.model.CommentModel
 
 
 @Composable
@@ -20,7 +21,9 @@ fun Article(
     content: String,
     author: String,
     date: String,
-    imageUrl: String
+    imageUrl: String,
+    responses: List<String> = emptyList(),
+    comments: List<CommentModel> = emptyList()
 ) {
     Card(
         shape = RoundedCornerShape(12.dp),
@@ -32,7 +35,6 @@ fun Article(
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
 
-            // Imagen desde internet con Coil
             AsyncImage(
                 model = imageUrl,
                 contentDescription = "Imagen del artículo",

@@ -18,6 +18,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -42,7 +43,7 @@ fun BottomMenu(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(80.dp) // Aumentamos la altura para iconos grandes
+                .height(80.dp)
                 .navigationBarsPadding()
                 .background(customRed),
             verticalAlignment = Alignment.CenterVertically,
@@ -50,8 +51,8 @@ fun BottomMenu(
         ) {
             val items = listOf(
                 R.drawable.home,
-                R.drawable.article_person,
                 R.drawable.document_search,
+                R.drawable.article_person,
                 R.drawable.mail
             )
 
@@ -64,7 +65,7 @@ fun BottomMenu(
                         .fillMaxHeight()
                         .background(
                             if (isSelected) customWhite else customRed,
-                            RectangleShape // Cuadrado perfecto sin bordes redondeados
+                            RectangleShape
                         )
                         .clickable { onItemSelected(index) },
                     contentAlignment = Alignment.Center
@@ -72,7 +73,6 @@ fun BottomMenu(
                     Icon(
                         painter = painterResource(id = iconRes),
                         contentDescription = null,
-                        // Tamaño equilibrado para una barra de 80dp
                         modifier = Modifier.size(45.dp),
                         tint = if (isSelected) customRed else customWhite
                     )
@@ -85,7 +85,7 @@ fun BottomMenu(
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun BottomMenuPreview() {
-    var selectedIndex by remember { mutableStateOf(1) }
+    var selectedIndex by remember { mutableIntStateOf(1) }
 
     MaterialTheme {
         Scaffold(
