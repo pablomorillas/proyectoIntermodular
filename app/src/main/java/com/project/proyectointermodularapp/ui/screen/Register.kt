@@ -3,6 +3,7 @@ package com.project.proyectointermodularapp.ui.screen
 import android.util.Patterns
 import android.widget.Toast
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -21,7 +22,9 @@ import com.project.proyectointermodularapp.ui.theme.Grey
 import com.project.proyectointermodularapp.ui.theme.Red
 
 @Composable
-fun RegisterScreen() {
+fun RegisterScreen(
+    onLoginClick: () -> Unit
+) {
 
     val context = LocalContext.current
 
@@ -40,7 +43,7 @@ fun RegisterScreen() {
     ) {
 
         Image(
-            painter = painterResource(id = R.drawable.image_place_holder),
+            painter = painterResource(id = R.mipmap.logo_app_invertido_sin_fondo),
             contentDescription = "Logo",
             modifier = Modifier
                 .size(140.dp)
@@ -129,12 +132,14 @@ fun RegisterScreen() {
             Text(
                 color = Grey,
                 modifier = Modifier.paddingFromBaseline(5.dp),
-                text = "¿No tienes una cuenta? "
+                text = "¿Ya tienes una cuenta? "
             )
             Text(
                 color = Red,
-                modifier = Modifier.paddingFromBaseline(5.dp),
-                text = "Regístrate."
+                modifier = Modifier
+                    .paddingFromBaseline(5.dp)
+                    .clickable { onLoginClick() },
+                text = "Inicia sesión."
             )
         }
 
@@ -147,6 +152,8 @@ fun RegisterScreen() {
 @Composable
 fun RegisterScreenPreview() {
     MaterialTheme {
-        RegisterScreen()
+        RegisterScreen(onLoginClick = {})
     }
 }
+
+

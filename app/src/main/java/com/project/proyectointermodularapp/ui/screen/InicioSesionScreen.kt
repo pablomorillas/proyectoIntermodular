@@ -1,6 +1,7 @@
 package com.project.proyectointermodularapp.ui.screen
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -10,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.paddingFromBaseline
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
@@ -33,7 +35,8 @@ import com.project.proyectointermodularapp.ui.theme.Red
 
 @Composable
 fun LoginScreen(
-    onLoginClick: (String, String) -> Unit
+    onLoginClick: (String, String) -> Unit,
+    onRegisterClick: () -> Unit
 ) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
@@ -70,9 +73,11 @@ fun LoginScreen(
     ) {
 
         Image(
-            painter = painterResource(id = R.drawable.image_place_holder),
+            painter = painterResource(id = R.mipmap.logo_app_invertido_sin_fondo),
             contentDescription = "Logo",
-            modifier = Modifier.padding(bottom = 30.dp)
+            modifier = Modifier
+                .size(140.dp)
+                .padding(bottom = 30.dp)
         )
 
         Text(
@@ -141,7 +146,9 @@ fun LoginScreen(
             )
             Text(
                 color = Red,
-                modifier = Modifier.paddingFromBaseline(5.dp),
+                modifier = Modifier
+                    .paddingFromBaseline(5.dp)
+                    .clickable { onRegisterClick() },
                 text = "Regístrate."
             )
         }
@@ -159,8 +166,12 @@ fun isValidEmail(email: String): Boolean {
 @Composable
 fun LoginScreenPreview() {
     MaterialTheme {
-        LoginScreen { username, password ->
-            println("Usuario: $username, Password: $password")
-        }
+        LoginScreen(
+            onLoginClick = { username, password ->
+                println("Usuario: $username, Password: $password")
+            },
+            onRegisterClick = {}
+        )
     }
 }
+
