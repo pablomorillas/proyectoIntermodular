@@ -22,7 +22,8 @@ fun AppNavigation(
 ) {
     NavHost(
         navController = navController,
-        startDestination = Route.Login.route
+        startDestination = Route.Login.route,
+        modifier = modifier
     ) {
 
         composable(Route.Login.route) {
@@ -51,11 +52,36 @@ fun AppNavigation(
         }
 
         composable(Route.Home.route) {
-            HomeScreen()
+            HomeScreen(
+                onArticleClick = { articleId ->
+                    navController.navigate(Route.ArticleDetail.createRoute(articleId))
+                }
+            )
         }
 
         composable(Route.Articles.route) {
             ArticlesScreen()
+        }
+
+        composable(Route.MyRequests.route) {
+            MyRequestsScreen()
+        }
+
+        composable(Route.CompanyRequests.route) {
+            InboxScreen()
+        }
+
+        composable(
+            route = Route.ArticleDetail.route,
+            arguments = listOf(
+                navArgument("articleId") { type = NavType.IntType }
+            )
+        ) { backStackEntry ->
+            val articleId = backStackEntry.arguments?.getInt("articleId") ?: return@composable
+            ArticleDetailScreen(
+                articleId = articleId,
+                onBackClick = { navController.popBackStack() }
+            )
         }
     }
 }

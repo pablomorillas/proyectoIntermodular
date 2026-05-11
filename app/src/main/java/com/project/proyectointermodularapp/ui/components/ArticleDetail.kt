@@ -12,17 +12,25 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import com.project.proyectointermodularapp.domain.model.ArticleModel
 
 @Composable
 fun ArticleDetail(
-    article: ArticleModel
+    article: ArticleModel,
+    modifier: Modifier = Modifier,
+    topContentPadding: Dp = 0.dp
 ) {
     LazyColumn(
-        modifier = Modifier.fillMaxSize(),
-        contentPadding = PaddingValues(16.dp)
+        modifier = modifier.fillMaxSize(),
+        contentPadding = PaddingValues(
+            start = 16.dp,
+            top = 16.dp + topContentPadding,
+            end = 16.dp,
+            bottom = 16.dp
+        )
     ) {
         item {
             AsyncImage(

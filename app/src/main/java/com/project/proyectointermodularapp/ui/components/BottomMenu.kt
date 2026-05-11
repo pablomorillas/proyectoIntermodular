@@ -10,8 +10,10 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.material3.Badge
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -28,12 +30,14 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.project.proyectointermodularapp.R
 
 @Composable
 fun BottomMenu(
     selectedIndex: Int?,
+    companyRequestsCount: Int,
     onItemSelected: (Int) -> Unit
 ) {
     val customRed = Color(0xFFC61313)
@@ -50,14 +54,19 @@ fun BottomMenu(
             horizontalArrangement = Arrangement.SpaceEvenly
         ) {
             val items = listOf(
-                R.drawable.home,
-                R.drawable.document_search,
-                R.drawable.article_person,
-                R.drawable.mail
+                0 to R.drawable.home,
+                1 to R.drawable.document_search,
+                2 to R.drawable.article_person,
+                3 to R.drawable.mail
             )
 
-            items.forEachIndexed { index, iconRes ->
+            items.forEach { (index, iconRes) ->
                 val isSelected = selectedIndex == index
+                val badgeText = when {
+                    index != 3 || companyRequestsCount <= 0 -> null
+                    companyRequestsCount >= 10 -> "+9"
+                    else -> companyRequestsCount.toString()
+                }
 
                 Box(
                     modifier = Modifier
@@ -70,12 +79,29 @@ fun BottomMenu(
                         .clickable { onItemSelected(index) },
                     contentAlignment = Alignment.Center
                 ) {
-                    Icon(
-                        painter = painterResource(id = iconRes),
-                        contentDescription = null,
-                        modifier = Modifier.size(45.dp),
-                        tint = if (isSelected) customRed else customWhite
-                    )
+                    Box(modifier = Modifier.size(45.dp)) {
+                        Icon(
+                            painter = painterResource(id = iconRes),
+                            contentDescription = null,
+                            modifier = Modifier.fillMaxSize(),
+                            tint = if (isSelected) customRed else customWhite
+                        )
+
+                        if (badgeText != null) {
+                            Badge(
+                                modifier = Modifier
+                                    .align(Alignment.TopEnd)
+                                    .offset(x = 8.dp, y = (-6).dp),
+                                containerColor = Color(0xFF8B0E0E),
+                                contentColor = customWhite
+                            ) {
+                                Text(
+                                    text = badgeText,
+                                    fontWeight = FontWeight.Bold
+                                )
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -92,6 +118,7 @@ fun BottomMenuPreview() {
             bottomBar = {
                 BottomMenu(
                     selectedIndex = selectedIndex,
+                    companyRequestsCount = 12,
                     onItemSelected = { selectedIndex = it }
                 )
             }
