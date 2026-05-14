@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -36,7 +37,8 @@ import com.project.proyectointermodularapp.ui.theme.Red
 @Composable
 fun LoginScreen(
     onLoginClick: (String, String) -> Unit,
-    onRegisterClick: () -> Unit
+    onRegisterClick: () -> Unit,
+    onGuestClick: () -> Unit
 ) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
@@ -48,14 +50,14 @@ fun LoginScreen(
         var valid = true
 
         if (!isValidEmail(email)) {
-            emailError = "Email no válido"
+            emailError = "Email no valido"
             valid = false
         } else {
             emailError = null
         }
 
         if (password.length < 6) {
-            passwordError = "Mínimo 6 caracteres"
+            passwordError = "Minimo 6 caracteres"
             valid = false
         } else {
             passwordError = null
@@ -71,7 +73,6 @@ fun LoginScreen(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-
         Image(
             painter = painterResource(id = R.mipmap.logo_app_invertido_sin_fondo),
             contentDescription = "Logo",
@@ -81,9 +82,9 @@ fun LoginScreen(
         )
 
         Text(
-            text = "Iniciar Sesión",
+            text = "Iniciar sesion",
             style = MaterialTheme.typography.headlineLarge,
-            modifier = Modifier.padding(30.dp),
+            modifier = Modifier.padding(30.dp)
         )
 
         OutlinedTextField(
@@ -109,7 +110,7 @@ fun LoginScreen(
                 password = it
                 passwordError = null
             },
-            label = { Text("Contraseña") },
+            label = { Text("Contrasena") },
             isError = passwordError != null,
             singleLine = true,
             visualTransformation = PasswordVisualTransformation(),
@@ -134,22 +135,33 @@ fun LoginScreen(
                 disabledContainerColor = Grey
             )
         ) {
-            Text("Iniciar sesión")
+            Text("Iniciar sesion")
         }
 
+        Spacer(modifier = Modifier.height(12.dp))
+
+        OutlinedButton(
+            onClick = onGuestClick,
+            modifier = Modifier.fillMaxWidth(),
+            colors = ButtonDefaults.outlinedButtonColors(contentColor = Red)
+        ) {
+            Text("Entrar como invitado")
+        }
+
+        Spacer(modifier = Modifier.height(8.dp))
+
         Row {
-            
             Text(
                 color = Grey,
                 modifier = Modifier.paddingFromBaseline(5.dp),
-                text = "¿No tienes una cuenta? "
+                text = "No tienes una cuenta? "
             )
             Text(
                 color = Red,
                 modifier = Modifier
                     .paddingFromBaseline(5.dp)
                     .clickable { onRegisterClick() },
-                text = "Regístrate."
+                text = "Registrate."
             )
         }
     }
@@ -170,8 +182,8 @@ fun LoginScreenPreview() {
             onLoginClick = { username, password ->
                 println("Usuario: $username, Password: $password")
             },
-            onRegisterClick = {}
+            onRegisterClick = {},
+            onGuestClick = {}
         )
     }
 }
-

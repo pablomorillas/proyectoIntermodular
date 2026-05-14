@@ -1,3 +1,11 @@
 <resources>
     <string name="app_name">proyectoIntermodularApp</string>
+    <string name="screen_login">Iniciar sesion</string>
+    <string name="screen_register">Registro</string>
+    <string name="screen_home">Inicio</string>
+    <string name="screen_articles">Peticiones</string>
+    <string name="screen_my_requests">Mis peticiones</string>
+    <string name="screen_company_requests">Respuestas</string>
+    <string name="screen_article_detail">Detalle de peticion</string>
+    <string name="back_button">Volver</string>
 </resources>

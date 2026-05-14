@@ -2,12 +2,10 @@ package com.project.proyectointermodularapp.ui.screen
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -21,7 +19,6 @@ import com.project.proyectointermodularapp.ui.theme.Red
 @Composable
 fun ArticleDetailScreen(
     articleId: Int,
-    onBackClick: () -> Unit,
     viewModel: ArticleViewModel = viewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
@@ -66,20 +63,8 @@ fun ArticleDetailScreen(
                 Box(modifier = Modifier.fillMaxSize()) {
                     ArticleDetail(
                         article = article,
-                        modifier = Modifier.fillMaxSize(),
-                        topContentPadding = 44.dp
+                        modifier = Modifier.fillMaxSize()
                     )
-
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .align(Alignment.TopStart)
-                            .padding(horizontal = 8.dp, vertical = 4.dp)
-                    ) {
-                        TextButton(onClick = onBackClick) {
-                            Text("<- Volver")
-                        }
-                    }
                 }
             }
         }
