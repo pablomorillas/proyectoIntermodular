@@ -1,22 +1,66 @@
-const peticiones = [
-    {
-        id: 1,
-        titulo: "Petición 1",
-        descripcion: "Descripción de la petición 1",
-        imagen : "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2F1.bp.blogspot.com%2F-0kt6ekXtQrA%2FVQzbzppVR-I%2FAAAAAAACi6U%2F-8DXV8UxDKs%2Fs1600%2FAtardecer%252Ben%252Bla%252Bplaya.jpg&f=1&nofb=1&ipt=38020274db8cead1d653507e60ae52709e562d8134f25b9dd160f50fc2cc03b0"
-    },
-     {
-        id: 2,
-        titulo: "Petición 2",
-        descripcion: "Descripción de la petición 2",
-        imagen : "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2F3.bp.blogspot.com%2F-JxYjZjRXIh4%2FVDWJoJPtYuI%2FAAAAAAACVDM%2FC9r2wraqtlQ%2Fs1600%2Fpaisajes%252Bnaturales%252Bfotos%252Bnuevas%252B(10).jpg&f=1&nofb=1&ipt=c4a0014efce126328d36f783b9aa3692ddd6b8fc6ce4b6156c7a5d89066a638c"
-    },
-    {
-        id: 3,
-        titulo: "Petición 3",
-        descripcion: "Descripción de la petición 3",
-        imagen :  "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fimages.squarespace-cdn.com%2Fcontent%2Fv1%2F66b4c85b196d2a781c6d469c%2F1723806720006-AVE7BCGQB0KSIG8FNSMN%2Funsplash-image-nnzkZNYWHaU.jpg%3Fformat%3D750w&f=1&nofb=1&ipt=409b986ec4a04011657d2e1aef1d78f068096f799f1a32db2ecc5f9b03a8ad16"
-    }
+const requests = [
+  {
+    id: 1,
+    tipo: "general",
+    titulo: "Solicitud de reforma de fachada comunitaria",
+    descripcion: "Comunidad en Valencia busca empresas para reparar fisuras y aplicar revestimiento impermeable.",
+    imagen: null,
+  },
+  {
+    id: 2,
+    tipo: "general",
+    titulo: "Solicitud de reforma integral de vivienda",
+    descripcion: "Usuario del foro necesita redistribucion interior, cocina nueva y actualizacion electrica.",
+    imagen: null,
+  },
+  {
+    id: 3,
+    tipo: "general",
+    titulo: "Solicitud de adecuacion de local comercial",
+    descripcion: "Proyecto para apertura de cafeteria con requisitos de accesibilidad y licencia.",
+    imagen: null,
+  },
+  {
+    id: 4,
+    tipo: "general",
+    titulo: "Solicitud de obra en oficina creativa",
+    descripcion: "Empresa solicita rediseno de zonas colaborativas y tratamiento acustico.",
+    imagen: null,
+  },
+  {
+    id: 5,
+    tipo: "propia",
+    titulo: "Tu solicitud de mejora energetica",
+    descripcion: "Sustitucion de aislamiento y optimizacion termica de edificio residencial.",
+    imagen: null,
+    tieneRespuesta: true,
+    respuestaResumen: "Te han respondido 3 empresas con propuesta inicial.",
+  },
+  {
+    id: 6,
+    tipo: "propia",
+    titulo: "Tu solicitud de home staging",
+    descripcion: "Preparacion de vivienda para venta incluyendo pequenas reparaciones y pintura.",
+    imagen: null,
+    tieneRespuesta: false,
+    respuestaResumen: "",
+  },
+  {
+    id: 7,
+    tipo: "propia",
+    titulo: "Tu solicitud de ampliacion de terraza",
+    descripcion: "Consulta para ampliar terraza con cerramiento ligero y estudio de cargas.",
+    imagen: null,
+    tieneRespuesta: true,
+    respuestaResumen: "Nueva respuesta recibida de una empresa especializada.",
+  },
+  {
+    id: 8,
+    tipo: "general",
+    titulo: "Solicitud de rehabilitacion de nave industrial",
+    descripcion: "Publicacion abierta en el foro para actualizar cubierta, iluminacion y pavimento tecnico.",
+    imagen: null,
+  },
 ];
 
-export default peticiones;
+export default requests;

@@ -1,13 +1,13 @@
-import { Outlet } from "react-router-dom";
+﻿import { Outlet } from "react-router-dom";
 
 function Content({ titulo }) {
     return (
         <main>
             <section>
                 {titulo && (
-                    <h1>
+                    <h2>
                         {titulo}
-                    </h1>
+                    </h2>
                 )}
                 <Outlet />
             </section>
