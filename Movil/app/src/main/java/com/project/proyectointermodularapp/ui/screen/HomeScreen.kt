@@ -49,28 +49,28 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil3.compose.AsyncImage
 import com.project.proyectointermodularapp.R
-import com.project.proyectointermodularapp.domain.model.ArticleModel
+import com.project.proyectointermodularapp.domain.model.RequestModel
 import com.project.proyectointermodularapp.ui.theme.AlmosWhite
 import com.project.proyectointermodularapp.ui.theme.Grey
 import com.project.proyectointermodularapp.ui.theme.Red
 
 @Composable
 fun HomeScreen(
-    onArticleClick: (Int) -> Unit = {},
-    viewModel: ArticleViewModel = viewModel()
+    onRequestClick: (Int) -> Unit = {},
+    viewModel: RequestViewModel = viewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
     var randomSeed by remember { mutableIntStateOf(0) }
 
-    val alertArticle = remember(uiState.articles, randomSeed) {
-        uiState.articles
+    val alertRequest = remember(uiState.requests, randomSeed) {
+        uiState.requests
             .filter { it.responses.isNotEmpty() }
             .shuffled()
             .firstOrNull()
     }
 
-    val randomArticles = remember(uiState.articles, randomSeed) {
-        uiState.articles
+    val randomRequests = remember(uiState.requests, randomSeed) {
+        uiState.requests
             .shuffled()
             .take(4)
     }
@@ -137,11 +137,11 @@ fun HomeScreen(
                         }
                     }
 
-                    if (alertArticle != null) {
+                    if (alertRequest != null) {
                         item {
                             AlertResponseCard(
-                                article = alertArticle,
-                                onClick = { onArticleClick(alertArticle.id) }
+                                request = alertRequest,
+                                onClick = { onRequestClick(alertRequest.id) }
                             )
                         }
                     }
@@ -155,7 +155,7 @@ fun HomeScreen(
                         )
                     }
 
-                    if (randomArticles.isEmpty()) {
+                    if (randomRequests.isEmpty()) {
                         item {
                             Text(
                                 text = "Todavia no hay publicaciones disponibles.",
@@ -165,12 +165,12 @@ fun HomeScreen(
                         }
                     } else {
                         items(
-                            items = randomArticles,
+                            items = randomRequests,
                             key = { it.id }
-                        ) { article ->
-                            HomeArticleCard(
-                                article = article,
-                                onClick = { onArticleClick(article.id) }
+                        ) { request ->
+                            HomeRequestCard(
+                                request = request,
+                                onClick = { onRequestClick(request.id) }
                             )
                         }
                     }
@@ -200,7 +200,7 @@ private fun ProfileAvatarPlaceholder() {
 
 @Composable
 private fun AlertResponseCard(
-    article: ArticleModel,
+    request: RequestModel,
     onClick: () -> Unit
 ) {
     val infiniteTransition = rememberInfiniteTransition(label = "alert-motion")
@@ -228,7 +228,7 @@ private fun AlertResponseCard(
             verticalArrangement = Arrangement.spacedBy(6.dp)
         ) {
             AsyncImage(
-                model = article.imageUrl,
+                model = request.imageUrl,
                 contentDescription = "Imagen de la peticion",
                 modifier = Modifier
                     .fillMaxWidth()
@@ -251,7 +251,7 @@ private fun AlertResponseCard(
             )
 
             Text(
-                text = article.title,
+                text = request.title,
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Bold,
                 maxLines = 2,
@@ -259,7 +259,7 @@ private fun AlertResponseCard(
             )
 
             Text(
-                text = article.responses.firstOrNull() ?: "",
+                text = request.responses.firstOrNull() ?: "",
                 style = MaterialTheme.typography.bodySmall,
                 color = Grey,
                 maxLines = 2,
@@ -270,8 +270,8 @@ private fun AlertResponseCard(
 }
 
 @Composable
-private fun HomeArticleCard(
-    article: ArticleModel,
+private fun HomeRequestCard(
+    request: RequestModel,
     onClick: () -> Unit
 ) {
     Card(
@@ -287,7 +287,7 @@ private fun HomeArticleCard(
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             AsyncImage(
-                model = article.imageUrl,
+                model = request.imageUrl,
                 contentDescription = "Imagen de la peticion",
                 modifier = Modifier
                     .fillMaxWidth()
@@ -297,7 +297,7 @@ private fun HomeArticleCard(
             )
 
             Text(
-                text = article.title,
+                text = request.title,
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Bold,
                 color = Color(0xFF1A1A1A),
@@ -306,7 +306,7 @@ private fun HomeArticleCard(
             )
 
             Text(
-                text = article.content,
+                text = request.content,
                 style = MaterialTheme.typography.bodySmall,
                 color = Color(0xFF3D3D3D),
                 maxLines = 2,
@@ -314,10 +314,12 @@ private fun HomeArticleCard(
             )
 
             Text(
-                text = "${article.author} · ${article.date}",
+                text = "${request.author} · ${request.date}",
                 style = MaterialTheme.typography.labelSmall,
                 color = Grey
             )
         }
     }
 }
+
+

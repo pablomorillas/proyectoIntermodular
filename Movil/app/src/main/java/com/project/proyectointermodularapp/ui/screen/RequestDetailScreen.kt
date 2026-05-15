@@ -13,13 +13,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.project.proyectointermodularapp.ui.components.ArticleDetail
+import com.project.proyectointermodularapp.ui.components.RequestDetail
 import com.project.proyectointermodularapp.ui.theme.Red
 
 @Composable
-fun ArticleDetailScreen(
-    articleId: Int,
-    viewModel: ArticleViewModel = viewModel()
+fun RequestDetailScreen(
+    requestId: Int,
+    viewModel: RequestViewModel = viewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
@@ -39,15 +39,15 @@ fun ArticleDetailScreen(
                 contentAlignment = Alignment.Center
             ) {
                 Text(
-                    text = uiState.error ?: "No se pudo cargar el articulo.",
+                    text = uiState.error ?: "No se pudo cargar la solicitud.",
                     color = MaterialTheme.colorScheme.error
                 )
             }
         }
 
         else -> {
-            val article = uiState.articles.find { it.id == articleId }
-            if (article == null) {
+            val request = uiState.requests.find { it.id == requestId }
+            if (request == null) {
                 Box(
                     modifier = Modifier
                         .fillMaxSize()
@@ -55,14 +55,14 @@ fun ArticleDetailScreen(
                     contentAlignment = Alignment.Center
                 ) {
                     Text(
-                        text = "Articulo no encontrado.",
+                        text = "Solicitud no encontrada.",
                         style = MaterialTheme.typography.bodyLarge
                     )
                 }
             } else {
                 Box(modifier = Modifier.fillMaxSize()) {
-                    ArticleDetail(
-                        article = article,
+                    RequestDetail(
+                        request = request,
                         modifier = Modifier.fillMaxSize()
                     )
                 }

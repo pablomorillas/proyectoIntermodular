@@ -15,11 +15,11 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
-import com.project.proyectointermodularapp.domain.model.ArticleModel
+import com.project.proyectointermodularapp.domain.model.RequestModel
 
 @Composable
-fun ArticleDetail(
-    article: ArticleModel,
+fun RequestDetail(
+    request: RequestModel,
     modifier: Modifier = Modifier,
     topContentPadding: Dp = 0.dp
 ) {
@@ -34,7 +34,7 @@ fun ArticleDetail(
     ) {
         item {
             AsyncImage(
-                model = article.imageUrl,
+                model = request.imageUrl,
                 contentDescription = null,
                 modifier = Modifier
                     .fillMaxWidth()
@@ -45,14 +45,14 @@ fun ArticleDetail(
             Spacer(Modifier.height(16.dp))
 
             Text(
-                text = article.title,
+                text = request.title,
                 style = MaterialTheme.typography.headlineMedium
             )
 
             Spacer(Modifier.height(8.dp))
 
             Text(
-                text = "Por ${article.author} Â· ${article.date}",
+                text = "Por ${request.author} · ${request.date}",
                 style = MaterialTheme.typography.bodySmall,
                 color = Color.Gray
             )
@@ -60,7 +60,7 @@ fun ArticleDetail(
             Spacer(Modifier.height(16.dp))
 
             Text(
-                text = article.content,
+                text = request.content,
                 style = MaterialTheme.typography.bodyLarge
             )
         }

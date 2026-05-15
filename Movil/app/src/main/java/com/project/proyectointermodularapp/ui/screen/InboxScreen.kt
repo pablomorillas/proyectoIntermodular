@@ -28,29 +28,29 @@ private data class CompanyRequestUiModel(
     val id: String,
     val companyName: String,
     val details: String,
-    val articleTitle: String,
-    val articleDate: String
+    val requestTitle: String,
+    val requestDate: String
 )
 
 @Composable
 fun InboxScreen(
     modifier: Modifier = Modifier,
-    viewModel: ArticleViewModel = viewModel()
+    viewModel: RequestViewModel = viewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
-    val companyRequests = uiState.articles.flatMap { article ->
-        article.responses.mapIndexed { index, response ->
+    val companyRequests = uiState.requests.flatMap { request ->
+        request.responses.mapIndexed { index, response ->
             val responseParts = response.split(":", limit = 2)
             val companyName = responseParts.firstOrNull()?.trim().orEmpty()
             val details = responseParts.getOrElse(1) { response }.trim()
 
             CompanyRequestUiModel(
-                id = "${article.id}-$index",
+                id = "${request.id}-$index",
                 companyName = if (companyName.isBlank()) "Empresa" else companyName,
                 details = details,
-                articleTitle = article.title,
-                articleDate = article.date
+                requestTitle = request.title,
+                requestDate = request.date
             )
         }
     }
@@ -133,13 +133,13 @@ fun InboxScreen(
                                 )
 
                                 Text(
-                                    text = "Solicitud sobre: ${request.articleTitle}",
+                                    text = "Solicitud sobre: ${request.requestTitle}",
                                     style = MaterialTheme.typography.bodySmall,
                                     color = Grey
                                 )
 
                                 Text(
-                                    text = request.articleDate,
+                                    text = request.requestDate,
                                     style = MaterialTheme.typography.labelSmall,
                                     color = Grey
                                 )

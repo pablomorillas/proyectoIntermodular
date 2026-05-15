@@ -1,6 +1,10 @@
 package com.project.proyectointermodularapp.ui.screen
 
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.CircularProgressIndicator
@@ -11,25 +15,25 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.project.proyectointermodularapp.ui.components.Article
+import com.project.proyectointermodularapp.ui.components.RequestCard
 import com.project.proyectointermodularapp.ui.theme.Red
 
 @Composable
-fun ArticlesScreen(
-    viewModel: ArticleViewModel = viewModel()
+fun RequestsScreen(
+    viewModel: RequestViewModel = viewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
     Column {
         Text(
-            text = "Articulos públicos",
+            text = "Solicitudes publicas",
             style = MaterialTheme.typography.headlineLarge,
             color = Red,
             modifier = Modifier.padding(16.dp)
         )
+
         when {
             uiState.isLoading -> {
                 Box(
@@ -57,19 +61,17 @@ fun ArticlesScreen(
                     modifier = Modifier.fillMaxSize(),
                     contentPadding = PaddingValues(bottom = 80.dp)
                 ) {
-                    items(uiState.articles) { article ->
-                        Article(
-                            title = article.title,
-                            content = article.content,
-                            author = article.author,
-                            date = article.date,
-                            imageUrl = article.imageUrl
+                    items(uiState.requests) { request ->
+                        RequestCard(
+                            title = request.title,
+                            content = request.content,
+                            author = request.author,
+                            date = request.date,
+                            imageUrl = request.imageUrl
                         )
                     }
                 }
             }
         }
     }
-
-
 }

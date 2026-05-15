@@ -1,6 +1,6 @@
 package com.project.proyectointermodularapp.domain.model
 
-data class ArticleModel(
+data class RequestModel(
     val id: Int,
     val title: String,
     val content: String,
@@ -10,3 +10,4 @@ data class ArticleModel(
     val responses: List<String> = emptyList(),
     val comments: List<CommentModel> = emptyList()
 )
+

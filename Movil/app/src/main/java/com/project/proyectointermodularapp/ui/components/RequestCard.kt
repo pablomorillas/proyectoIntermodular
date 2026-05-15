@@ -1,22 +1,30 @@
 package com.project.proyectointermodularapp.ui.components
 
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.*
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
-import androidx.compose.ui.tooling.preview.Preview
 import com.project.proyectointermodularapp.domain.model.CommentModel
 
-
 @Composable
-fun Article(
+fun RequestCard(
     title: String,
     content: String,
     author: String,
@@ -34,10 +42,9 @@ fun Article(
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
-
             AsyncImage(
                 model = imageUrl,
-                contentDescription = "Imagen del artículo",
+                contentDescription = "Imagen de la solicitud",
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(180.dp)
@@ -67,11 +74,10 @@ fun Article(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = "Por $author · $date",
+                    text = "Por $author � $date",
                     style = MaterialTheme.typography.bodySmall,
                     color = Color.Gray
                 )
-
             }
         }
     }
@@ -79,12 +85,12 @@ fun Article(
 
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
-fun ArticlePreview() {
-    Article(
-        title = "Título del artículo",
-        content = "Contenido del artículo",
+fun RequestCardPreview() {
+    RequestCard(
+        title = "Titulo de la solicitud",
+        content = "Contenido de la solicitud",
         author = "Autor",
         date = "Fecha",
-        imageUrl = "https://ejemplo.com/imagen.jpg",
+        imageUrl = "https://ejemplo.com/imagen.jpg"
     )
 }

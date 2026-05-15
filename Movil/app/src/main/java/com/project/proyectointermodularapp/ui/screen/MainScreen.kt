@@ -29,18 +29,18 @@ enum class AppScreen(val bottomIndex: Int? = null) {
     Register,
 
     Home(bottomIndex = 0),
-    Articles(bottomIndex = 1),
+    Requests(bottomIndex = 1),
     MyRequests(bottomIndex = 2),
     CompanyRequests(bottomIndex = 3),
 
-    ArticleDetail;
+    RequestDetail;
 
     companion object {
-        const val ARTICLE_ID_ARG = "articleId"
-        private val articleDetailBaseRoute = ArticleDetail.name
-        val articleDetailRoute = "$articleDetailBaseRoute/{$ARTICLE_ID_ARG}"
+        const val REQUEST_ID_ARG = "requestId"
+        private val requestDetailBaseRoute = RequestDetail.name
+        val requestDetailRoute = "$requestDetailBaseRoute/{$REQUEST_ID_ARG}"
 
-        fun createArticleDetailRoute(articleId: Int): String = "$articleDetailBaseRoute/$articleId"
+        fun createRequestDetailRoute(requestId: Int): String = "$requestDetailBaseRoute/$requestId"
     }
 }
 
@@ -69,11 +69,11 @@ fun ProyectoIntermodularAppBar(
 
 @Composable
 fun MainScreen(
-    articleViewModel: ArticleViewModel = viewModel(),
+    requestViewModel: RequestViewModel = viewModel(),
     navController: NavHostController = rememberNavController()
 ) {
-    val uiState by articleViewModel.uiState.collectAsState()
-    val companyRequestsCount = uiState.articles.sumOf { it.responses.size }
+    val uiState by requestViewModel.uiState.collectAsState()
+    val companyRequestsCount = uiState.requests.sumOf { it.responses.size }
 
     val currentBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRouteName = currentBackStackEntry?.destination?.route?.substringBefore("/")
@@ -87,10 +87,10 @@ fun MainScreen(
 
     val showBottomBar = currentScreen in setOf(
         AppScreen.Home,
-        AppScreen.Articles,
+        AppScreen.Requests,
         AppScreen.MyRequests,
         AppScreen.CompanyRequests,
-        AppScreen.ArticleDetail
+        AppScreen.RequestDetail
     )
 
     Scaffold(
@@ -105,13 +105,13 @@ fun MainScreen(
                 BottomMenu(
                     selectedIndex = when (currentScreen) {
                         AppScreen.Home,
-                        AppScreen.Articles,
+                        AppScreen.Requests,
                         AppScreen.MyRequests,
                         AppScreen.CompanyRequests -> currentScreen.bottomIndex
 
-                        AppScreen.ArticleDetail -> when (previousScreen) {
+                        AppScreen.RequestDetail -> when (previousScreen) {
                             AppScreen.Home -> AppScreen.Home.bottomIndex
-                            AppScreen.Articles -> AppScreen.Articles.bottomIndex
+                            AppScreen.Requests -> AppScreen.Requests.bottomIndex
                             AppScreen.MyRequests -> AppScreen.MyRequests.bottomIndex
                             AppScreen.CompanyRequests -> AppScreen.CompanyRequests.bottomIndex
                             else -> AppScreen.Home.bottomIndex
@@ -130,8 +130,8 @@ fun MainScreen(
                                 }
                             }
 
-                            AppScreen.Articles.bottomIndex -> {
-                                navController.navigate(AppScreen.Articles.name) {
+                            AppScreen.Requests.bottomIndex -> {
+                                navController.navigate(AppScreen.Requests.name) {
                                     popUpTo(AppScreen.Home.name) { saveState = true }
                                     launchSingleTop = true
                                     restoreState = true
@@ -196,14 +196,14 @@ fun MainScreen(
 
             composable(route = AppScreen.Home.name) {
                 HomeScreen(
-                    onArticleClick = { articleId ->
-                        navController.navigate(AppScreen.createArticleDetailRoute(articleId))
+                    onRequestClick = { requestId ->
+                        navController.navigate(AppScreen.createRequestDetailRoute(requestId))
                     }
                 )
             }
 
-            composable(route = AppScreen.Articles.name) {
-                ArticlesScreen()
+            composable(route = AppScreen.Requests.name) {
+                RequestsScreen()
             }
 
             composable(route = AppScreen.MyRequests.name) {
@@ -215,12 +215,12 @@ fun MainScreen(
             }
 
             composable(
-                route = AppScreen.articleDetailRoute,
-                arguments = listOf(navArgument(AppScreen.ARTICLE_ID_ARG) { type = NavType.IntType })
+                route = AppScreen.requestDetailRoute,
+                arguments = listOf(navArgument(AppScreen.REQUEST_ID_ARG) { type = NavType.IntType })
             ) { backStackEntry ->
-                val articleId = backStackEntry.arguments?.getInt(AppScreen.ARTICLE_ID_ARG)
+                val requestId = backStackEntry.arguments?.getInt(AppScreen.REQUEST_ID_ARG)
                     ?: return@composable
-                ArticleDetailScreen(articleId = articleId)
+                RequestDetailScreen(requestId = requestId)
             }
         }
     }
