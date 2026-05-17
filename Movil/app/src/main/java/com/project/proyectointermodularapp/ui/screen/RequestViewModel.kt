@@ -12,6 +12,9 @@ import com.project.proyectointermodularapp.domain.model.EmpresaModel
 import com.project.proyectointermodularapp.domain.model.RespuestaModel
 import com.project.proyectointermodularapp.domain.model.SolicitudModel
 import com.project.proyectointermodularapp.domain.model.ViewerSession
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -36,6 +39,50 @@ class RequestViewModel(
     fun setViewerSession(viewerSession: ViewerSession) {
         _uiState.value = _uiState.value.copy(viewerSession = viewerSession)
         rebuildUiStateFromCache()
+    }
+
+    fun createRequest(
+        title: String,
+        content: String,
+        isPrivate: Boolean,
+        imageUrl: String? = null
+    ): Boolean {
+        val currentClientId = getCurrentClientId() ?: return false
+        val normalizedTitle = title.trim()
+        val normalizedContent = content.trim()
+
+        if (normalizedTitle.isEmpty() || normalizedContent.isEmpty()) {
+            return false
+        }
+
+        val newRequestId = (solicitudesCache.maxOfOrNull { it.id } ?: 0) + 1
+        val fallbackImage = "https://picsum.photos/seed/request-$newRequestId/800/450"
+        val normalizedImage = imageUrl?.trim().orEmpty()
+        val finalImage = if (normalizedImage.isEmpty()) fallbackImage else normalizedImage
+        val now = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault()).format(Date())
+
+        val newRequest = SolicitudModel(
+            id = newRequestId,
+            clienteId = currentClientId,
+            titulo = normalizedTitle,
+            contenido = normalizedContent,
+            fechaHora = now,
+            imagenes = listOf(finalImage),
+            privada = isPrivate,
+            comentarios = emptyList()
+        )
+
+        solicitudesCache = solicitudesCache + newRequest
+        clientesCache = clientesCache.map { client ->
+            if (client.id == currentClientId) {
+                client.copy(solicitudesIds = client.solicitudesIds + newRequestId)
+            } else {
+                client
+            }
+        }
+
+        rebuildUiStateFromCache()
+        return true
     }
 
     private fun loadDomainData() {
@@ -86,9 +133,24 @@ class RequestViewModel(
             )
         }
 
+        val myRequestItems = when (val viewer = _uiState.value.viewerSession) {
+            ViewerSession.Invitado -> emptyList()
+            is ViewerSession.Cliente -> solicitudesCache
+                .filter { it.clienteId == viewer.id }
+                .map { solicitud ->
+                    solicitud.toRequestModel(
+                        clientes = clientesCache,
+                        empresas = empresasCache,
+                        respuestasVisibles = respuestasVisibles
+                    )
+                }
+            is ViewerSession.Empresa -> emptyList()
+        }
+
         _uiState.value = _uiState.value.copy(
             isLoading = false,
             requests = requestItems,
+            myRequests = myRequestItems,
             clientes = clientesCache,
             empresas = empresasCache,
             solicitudesVisibles = solicitudesVisibles,
@@ -102,6 +164,7 @@ class RequestViewModel(
         viewerSession: ViewerSession
     ): List<SolicitudModel> {
         return when (viewerSession) {
+            ViewerSession.Invitado -> solicitudes.filter { !it.privada }
             is ViewerSession.Empresa -> solicitudes
             is ViewerSession.Cliente -> solicitudes.filter { solicitud ->
                 !solicitud.privada || solicitud.clienteId == viewerSession.id
@@ -114,8 +177,17 @@ class RequestViewModel(
         viewerSession: ViewerSession
     ): List<RespuestaModel> {
         return when (viewerSession) {
+            ViewerSession.Invitado -> emptyList()
             is ViewerSession.Empresa -> respuestas.filter { it.empresaId == viewerSession.id }
             is ViewerSession.Cliente -> respuestas.filter { it.clienteId == viewerSession.id }
+        }
+    }
+
+    private fun getCurrentClientId(): Int? {
+        return when (val viewer = _uiState.value.viewerSession) {
+            ViewerSession.Invitado -> null
+            is ViewerSession.Cliente -> viewer.id
+            is ViewerSession.Empresa -> null
         }
     }
 

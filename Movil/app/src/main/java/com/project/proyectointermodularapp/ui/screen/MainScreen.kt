@@ -9,6 +9,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -21,6 +22,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.project.proyectointermodularapp.domain.model.ViewerSession
 import com.project.proyectointermodularapp.R
 import com.project.proyectointermodularapp.ui.components.BottomMenu
 
@@ -73,6 +75,7 @@ fun MainScreen(
     navController: NavHostController = rememberNavController()
 ) {
     val uiState by requestViewModel.uiState.collectAsState()
+    val isGuest = uiState.viewerSession == ViewerSession.Invitado
     val companyRequestsCount = uiState.requests.sumOf { it.responses.size }
 
     val currentBackStackEntry by navController.currentBackStackEntryAsState()
@@ -139,18 +142,32 @@ fun MainScreen(
                             }
 
                             AppScreen.MyRequests.bottomIndex -> {
-                                navController.navigate(AppScreen.MyRequests.name) {
-                                    popUpTo(AppScreen.Home.name) { saveState = true }
-                                    launchSingleTop = true
-                                    restoreState = true
+                                if (isGuest) {
+                                    navController.navigate(AppScreen.Login.name) {
+                                        popUpTo(AppScreen.Login.name) { inclusive = true }
+                                        launchSingleTop = true
+                                    }
+                                } else {
+                                    navController.navigate(AppScreen.MyRequests.name) {
+                                        popUpTo(AppScreen.Home.name) { saveState = true }
+                                        launchSingleTop = true
+                                        restoreState = true
+                                    }
                                 }
                             }
 
                             AppScreen.CompanyRequests.bottomIndex -> {
-                                navController.navigate(AppScreen.CompanyRequests.name) {
-                                    popUpTo(AppScreen.Home.name) { saveState = true }
-                                    launchSingleTop = true
-                                    restoreState = true
+                                if (isGuest) {
+                                    navController.navigate(AppScreen.Login.name) {
+                                        popUpTo(AppScreen.Login.name) { inclusive = true }
+                                        launchSingleTop = true
+                                    }
+                                } else {
+                                    navController.navigate(AppScreen.CompanyRequests.name) {
+                                        popUpTo(AppScreen.Home.name) { saveState = true }
+                                        launchSingleTop = true
+                                        restoreState = true
+                                    }
                                 }
                             }
                         }
@@ -167,6 +184,7 @@ fun MainScreen(
             composable(route = AppScreen.Login.name) {
                 LoginScreen(
                     onLoginClick = { _, _ ->
+                        requestViewModel.setViewerSession(ViewerSession.Cliente(id = 1))
                         navController.navigate(AppScreen.Home.name) {
                             popUpTo(AppScreen.Login.name) { inclusive = true }
                         }
@@ -175,6 +193,7 @@ fun MainScreen(
                         navController.navigate(AppScreen.Register.name)
                     },
                     onGuestClick = {
+                        requestViewModel.setViewerSession(ViewerSession.Invitado)
                         navController.navigate(AppScreen.Home.name) {
                             popUpTo(AppScreen.Login.name) { inclusive = true }
                         }
@@ -198,20 +217,39 @@ fun MainScreen(
                 HomeScreen(
                     onRequestClick = { requestId ->
                         navController.navigate(AppScreen.createRequestDetailRoute(requestId))
-                    }
+                    },
+                    viewModel = requestViewModel
                 )
             }
 
             composable(route = AppScreen.Requests.name) {
-                RequestsScreen()
+                RequestsScreen(viewModel = requestViewModel)
             }
 
             composable(route = AppScreen.MyRequests.name) {
-                MyRequestsScreen()
+                if (isGuest) {
+                    LaunchedEffect(Unit) {
+                        navController.navigate(AppScreen.Login.name) {
+                            popUpTo(AppScreen.Login.name) { inclusive = true }
+                            launchSingleTop = true
+                        }
+                    }
+                } else {
+                    MyRequestsScreen(viewModel = requestViewModel)
+                }
             }
 
             composable(route = AppScreen.CompanyRequests.name) {
-                InboxScreen()
+                if (isGuest) {
+                    LaunchedEffect(Unit) {
+                        navController.navigate(AppScreen.Login.name) {
+                            popUpTo(AppScreen.Login.name) { inclusive = true }
+                            launchSingleTop = true
+                        }
+                    }
+                } else {
+                    InboxScreen(viewModel = requestViewModel)
+                }
             }
 
             composable(
@@ -220,7 +258,10 @@ fun MainScreen(
             ) { backStackEntry ->
                 val requestId = backStackEntry.arguments?.getInt(AppScreen.REQUEST_ID_ARG)
                     ?: return@composable
-                RequestDetailScreen(requestId = requestId)
+                RequestDetailScreen(
+                    requestId = requestId,
+                    viewModel = requestViewModel
+                )
             }
         }
     }
