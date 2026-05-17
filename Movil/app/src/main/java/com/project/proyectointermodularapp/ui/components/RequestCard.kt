@@ -1,5 +1,6 @@
 package com.project.proyectointermodularapp.ui.components
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -30,6 +31,7 @@ fun RequestCard(
     author: String,
     date: String,
     imageUrl: String,
+    onClick: (() -> Unit)? = null,
     responses: List<String> = emptyList(),
     comments: List<CommentModel> = emptyList()
 ) {
@@ -37,7 +39,8 @@ fun RequestCard(
         shape = RoundedCornerShape(12.dp),
         modifier = Modifier
             .fillMaxWidth()
-            .padding(12.dp),
+            .padding(12.dp)
+            .let { base -> if (onClick != null) base.clickable { onClick() } else base },
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
     ) {

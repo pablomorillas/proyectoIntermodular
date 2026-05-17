@@ -125,18 +125,21 @@ class RequestViewModel(
             viewerSession = viewer
         )
 
-        val requestItems = solicitudesVisibles.map { solicitud ->
-            solicitud.toRequestModel(
-                clientes = clientesCache,
-                empresas = empresasCache,
-                respuestasVisibles = respuestasVisibles
-            )
-        }
+        val requestItems = solicitudesVisibles
+            .sortedByDescending { it.id }
+            .map { solicitud ->
+                solicitud.toRequestModel(
+                    clientes = clientesCache,
+                    empresas = empresasCache,
+                    respuestasVisibles = respuestasVisibles
+                )
+            }
 
         val myRequestItems = when (val viewer = _uiState.value.viewerSession) {
             ViewerSession.Invitado -> emptyList()
             is ViewerSession.Cliente -> solicitudesCache
                 .filter { it.clienteId == viewer.id }
+                .sortedByDescending { it.id }
                 .map { solicitud ->
                     solicitud.toRequestModel(
                         clientes = clientesCache,

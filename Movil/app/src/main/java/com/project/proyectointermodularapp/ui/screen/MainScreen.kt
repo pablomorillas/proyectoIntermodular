@@ -223,7 +223,12 @@ fun MainScreen(
             }
 
             composable(route = AppScreen.Requests.name) {
-                RequestsScreen(viewModel = requestViewModel)
+                RequestsScreen(
+                    onRequestClick = { requestId ->
+                        navController.navigate(AppScreen.createRequestDetailRoute(requestId))
+                    },
+                    viewModel = requestViewModel
+                )
             }
 
             composable(route = AppScreen.MyRequests.name) {
@@ -235,7 +240,12 @@ fun MainScreen(
                         }
                     }
                 } else {
-                    MyRequestsScreen(viewModel = requestViewModel)
+                    MyRequestsScreen(
+                        onRequestClick = { requestId ->
+                            navController.navigate(AppScreen.createRequestDetailRoute(requestId))
+                        },
+                        viewModel = requestViewModel
+                    )
                 }
             }
 

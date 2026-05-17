@@ -22,6 +22,7 @@ import com.project.proyectointermodularapp.ui.theme.Red
 
 @Composable
 fun RequestsScreen(
+    onRequestClick: (Int) -> Unit,
     viewModel: RequestViewModel = viewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
@@ -67,7 +68,8 @@ fun RequestsScreen(
                             content = request.content,
                             author = request.author,
                             date = request.date,
-                            imageUrl = request.imageUrl
+                            imageUrl = request.imageUrl,
+                            onClick = { onRequestClick(request.id) }
                         )
                     }
                 }
