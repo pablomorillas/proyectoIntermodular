@@ -224,6 +224,11 @@ fun MainScreen(
 
             composable(route = AppScreen.Requests.name) {
                 RequestsScreen(
+                    onCreateRequestClick = {
+                        navController.navigate(AppScreen.MyRequests.name) {
+                            launchSingleTop = true
+                        }
+                    },
                     onRequestClick = { requestId ->
                         navController.navigate(AppScreen.createRequestDetailRoute(requestId))
                     },
