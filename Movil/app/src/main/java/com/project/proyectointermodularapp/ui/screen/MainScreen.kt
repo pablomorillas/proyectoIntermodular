@@ -1,19 +1,33 @@
 package com.project.proyectointermodularapp.ui.screen
 
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
@@ -25,6 +39,8 @@ import androidx.navigation.navArgument
 import com.project.proyectointermodularapp.domain.model.ViewerSession
 import com.project.proyectointermodularapp.R
 import com.project.proyectointermodularapp.ui.components.BottomMenu
+import com.project.proyectointermodularapp.ui.components.LoginActionButton
+import com.project.proyectointermodularapp.ui.theme.Grey
 
 enum class AppScreen(val bottomIndex: Int? = null) {
     Login,
@@ -77,6 +93,8 @@ fun MainScreen(
     val uiState by requestViewModel.uiState.collectAsState()
     val isGuest = uiState.viewerSession == ViewerSession.Invitado
     val companyRequestsCount = uiState.requests.sumOf { it.responses.size }
+    var showCreateRequestGuestPrompt by remember { mutableStateOf(false) }
+    var postLoginRoute by remember { mutableStateOf<String?>(null) }
 
     val currentBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRouteName = currentBackStackEntry?.destination?.route?.substringBefore("/")
@@ -87,6 +105,9 @@ fun MainScreen(
     val previousRouteName = navController.previousBackStackEntry?.destination?.route?.substringBefore("/")
     val previousScreen = previousRouteName
         ?.let { runCatching { AppScreen.valueOf(it) }.getOrNull() }
+
+    val canNavigateBack = currentScreen == AppScreen.Register ||
+        currentScreen == AppScreen.RequestDetail
 
     val showBottomBar = currentScreen in setOf(
         AppScreen.Home,
@@ -99,8 +120,15 @@ fun MainScreen(
     Scaffold(
         topBar = {
             ProyectoIntermodularAppBar(
-                canNavigateBack = navController.previousBackStackEntry != null,
-                navigateUp = { navController.navigateUp() }
+                canNavigateBack = canNavigateBack,
+                navigateUp = {
+                    if (!navController.popBackStack()) {
+                        navController.navigate(AppScreen.Home.name) {
+                            popUpTo(AppScreen.Home.name) { inclusive = true }
+                            launchSingleTop = true
+                        }
+                    }
+                }
             )
         },
         bottomBar = {
@@ -142,32 +170,18 @@ fun MainScreen(
                             }
 
                             AppScreen.MyRequests.bottomIndex -> {
-                                if (isGuest) {
-                                    navController.navigate(AppScreen.Login.name) {
-                                        popUpTo(AppScreen.Login.name) { inclusive = true }
-                                        launchSingleTop = true
-                                    }
-                                } else {
-                                    navController.navigate(AppScreen.MyRequests.name) {
-                                        popUpTo(AppScreen.Home.name) { saveState = true }
-                                        launchSingleTop = true
-                                        restoreState = true
-                                    }
+                                navController.navigate(AppScreen.MyRequests.name) {
+                                    popUpTo(AppScreen.Home.name) { saveState = true }
+                                    launchSingleTop = true
+                                    restoreState = true
                                 }
                             }
 
                             AppScreen.CompanyRequests.bottomIndex -> {
-                                if (isGuest) {
-                                    navController.navigate(AppScreen.Login.name) {
-                                        popUpTo(AppScreen.Login.name) { inclusive = true }
-                                        launchSingleTop = true
-                                    }
-                                } else {
-                                    navController.navigate(AppScreen.CompanyRequests.name) {
-                                        popUpTo(AppScreen.Home.name) { saveState = true }
-                                        launchSingleTop = true
-                                        restoreState = true
-                                    }
+                                navController.navigate(AppScreen.CompanyRequests.name) {
+                                    popUpTo(AppScreen.Home.name) { saveState = true }
+                                    launchSingleTop = true
+                                    restoreState = true
                                 }
                             }
                         }
@@ -185,14 +199,18 @@ fun MainScreen(
                 LoginScreen(
                     onLoginClick = { _, _ ->
                         requestViewModel.setViewerSession(ViewerSession.Cliente(id = 1))
-                        navController.navigate(AppScreen.Home.name) {
+                        val destination = postLoginRoute ?: AppScreen.Home.name
+                        postLoginRoute = null
+                        navController.navigate(destination) {
                             popUpTo(AppScreen.Login.name) { inclusive = true }
+                            launchSingleTop = true
                         }
                     },
                     onRegisterClick = {
                         navController.navigate(AppScreen.Register.name)
                     },
                     onGuestClick = {
+                        postLoginRoute = null
                         requestViewModel.setViewerSession(ViewerSession.Invitado)
                         navController.navigate(AppScreen.Home.name) {
                             popUpTo(AppScreen.Login.name) { inclusive = true }
@@ -225,8 +243,12 @@ fun MainScreen(
             composable(route = AppScreen.Requests.name) {
                 RequestsScreen(
                     onCreateRequestClick = {
-                        navController.navigate(AppScreen.MyRequests.name) {
-                            launchSingleTop = true
+                        if (isGuest) {
+                            showCreateRequestGuestPrompt = true
+                        } else {
+                            navController.navigate(AppScreen.MyRequests.name) {
+                                launchSingleTop = true
+                            }
                         }
                     },
                     onRequestClick = { requestId ->
@@ -238,12 +260,15 @@ fun MainScreen(
 
             composable(route = AppScreen.MyRequests.name) {
                 if (isGuest) {
-                    LaunchedEffect(Unit) {
-                        navController.navigate(AppScreen.Login.name) {
-                            popUpTo(AppScreen.Login.name) { inclusive = true }
-                            launchSingleTop = true
+                    LoginRequiredAccessScreen(
+                        message = "Para ver tus solicitudes debes iniciar sesion.",
+                        onLoginClick = {
+                            postLoginRoute = AppScreen.MyRequests.name
+                            navController.navigate(AppScreen.Login.name) {
+                                launchSingleTop = true
+                            }
                         }
-                    }
+                    )
                 } else {
                     MyRequestsScreen(
                         onRequestClick = { requestId ->
@@ -256,12 +281,15 @@ fun MainScreen(
 
             composable(route = AppScreen.CompanyRequests.name) {
                 if (isGuest) {
-                    LaunchedEffect(Unit) {
-                        navController.navigate(AppScreen.Login.name) {
-                            popUpTo(AppScreen.Login.name) { inclusive = true }
-                            launchSingleTop = true
+                    LoginRequiredAccessScreen(
+                        message = "Para ver las respuestas debes iniciar sesion.",
+                        onLoginClick = {
+                            postLoginRoute = AppScreen.CompanyRequests.name
+                            navController.navigate(AppScreen.Login.name) {
+                                launchSingleTop = true
+                            }
                         }
-                    }
+                    )
                 } else {
                     InboxScreen(viewModel = requestViewModel)
                 }
@@ -275,9 +303,76 @@ fun MainScreen(
                     ?: return@composable
                 RequestDetailScreen(
                     requestId = requestId,
+                    onNavigateToLogin = {
+                        postLoginRoute = null
+                        navController.navigate(AppScreen.Login.name) {
+                            popUpTo(AppScreen.Login.name) { inclusive = true }
+                            launchSingleTop = true
+                        }
+                    },
                     viewModel = requestViewModel
                 )
             }
+        }
+
+        if (showCreateRequestGuestPrompt) {
+            AlertDialog(
+                onDismissRequest = { showCreateRequestGuestPrompt = false },
+                title = { Text("Inicia sesion") },
+                text = {
+                    Text(
+                        "Debes iniciar sesion para crear una solicitud."
+                    )
+                },
+                confirmButton = {
+                    LoginActionButton(
+                        onClick = {
+                            showCreateRequestGuestPrompt = false
+                            postLoginRoute = AppScreen.MyRequests.name
+                            navController.navigate(AppScreen.Login.name) {
+                                launchSingleTop = true
+                            }
+                        }
+                    )
+                },
+                dismissButton = {
+                    Button(
+                        onClick = { showCreateRequestGuestPrompt = false },
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = Grey,
+                            contentColor = Color.White
+                        )
+                    ) {
+                        Text("Mas tarde")
+                    }
+                }
+            )
+        }
+    }
+}
+
+@Composable
+private fun LoginRequiredAccessScreen(
+    message: String,
+    onLoginClick: () -> Unit
+) {
+    Box(
+        modifier = Modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center
+    ) {
+        Column(
+            modifier = Modifier.padding(24.dp),
+            verticalArrangement = Arrangement.spacedBy(12.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Text(
+                text = message,
+                style = MaterialTheme.typography.bodyLarge
+            )
+
+            LoginActionButton(
+                onClick = onLoginClick
+            )
         }
     }
 }
