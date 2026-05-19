@@ -23,6 +23,7 @@ function Requests() {
               key={req.id}
               titulo={req.titulo}
               descripcion={req.descripcion}
+              imagen={req.imagen}
             />
           ))}
         </div>

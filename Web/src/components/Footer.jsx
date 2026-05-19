@@ -1,23 +1,31 @@
-import React from "react";
+import { Link } from "react-router-dom";
 
 function Footer() {
-    return (
-        <footer className="bg-gray-800 text-gray-200 py-6 mt-12">
-            <div className="container mx-auto px-4 flex flex-col md:flex-row justify-between items-center">
-                <div className="mb-4 md:mb-0">
-                    <h2 className="text-lg font-bold">Requestructure</h2>
-                </div>
-                <nav className="flex gap-4 mb-4 md:mb-0">
-                    <a href="/" className="hover:text-white transition-colors">Inicio</a>
-                    <a href="/about" className="hover:text-white transition-colors">Acerca de</a>
-                    <a href="/contact" className="hover:text-white transition-colors">Contacto</a>
-                </nav>
-                <div className="text-sm">
-                    &copy; {new Date().getFullYear()} Mi Empresa. Todos los derechos reservados.
-                </div>
-            </div>
-        </footer>
-    );
+  return (
+    <footer className="footer-shell">
+      <div className="footer-inner">
+        <section className="footer-block footer-brand" aria-label="Marca">
+          <h2>Requestructure</h2>
+        </section>
+
+        <nav className="footer-block footer-nav" aria-label="Enlaces de pie de pagina">
+          <Link to="/" className="footer-link">
+            Inicio
+          </Link>
+          <Link to="/solicitudes" className="footer-link">
+            Solicitudes
+          </Link>
+          <Link to="/contact" className="footer-link">
+            Contacto
+          </Link>
+        </nav>
+
+        <section className="footer-block footer-copy" aria-label="Informacion legal">
+          <p>&copy; {new Date().getFullYear()} Requestructure. Todos los derechos reservados.</p>
+        </section>
+      </div>
+    </footer>
+  );
 }
 
 export default Footer;

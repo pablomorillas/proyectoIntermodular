@@ -6,6 +6,8 @@ import Requests from "../pages/Requests";
 import Responses from "../pages/Responses";
 import Contact from "../pages/Contact";
 import ErrorPage from "../pages/ErrorPage";
+import Login from "../pages/Login";
+import Register from "../pages/Register";
 
 function AppRouter() {
   return (
@@ -24,6 +26,11 @@ function AppRouter() {
         <Route path="/404" element={<Navigate to="/error" replace />} />
         <Route path="*" element={<ErrorPage />} />
       </Route>
+
+      <Route path="/login" element={<Login />} />
+      <Route path="/iniciar-sesion" element={<Navigate to="/login" replace />} />
+      <Route path="/register" element={<Register />} />
+      <Route path="/registro" element={<Navigate to="/register" replace />} />
     </Routes>
   );
 }

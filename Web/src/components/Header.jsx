@@ -26,9 +26,9 @@ function Header() {
           </span>
         </div>
 
-        <button type="button" className="user-btn" aria-label="Perfil de usuario">
+        <Link to="/login" className="user-btn" aria-label="Iniciar sesion">
           <img src={userImage} alt="" />
-        </button>
+        </Link>
       </div>
 
       <Nav />
