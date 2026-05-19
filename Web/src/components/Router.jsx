@@ -4,6 +4,8 @@ import Content from "./Content";
 import YourRequests from "../pages/YourRequests";
 import Requests from "../pages/Requests";
 import Responses from "../pages/Responses";
+import Contact from "../pages/Contact";
+import ErrorPage from "../pages/ErrorPage";
 
 function AppRouter() {
   return (
@@ -16,6 +18,11 @@ function AppRouter() {
         <Route path="/solicitudes" element={<Requests />} />
         <Route path="/yourRequests" element={<YourRequests />} />
         <Route path="/respuestas" element={<Responses />} />
+        <Route path="/contact" element={<Contact />} />
+        <Route path="/contacto" element={<Navigate to="/contact" replace />} />
+        <Route path="/error" element={<ErrorPage />} />
+        <Route path="/404" element={<Navigate to="/error" replace />} />
+        <Route path="*" element={<ErrorPage />} />
       </Route>
     </Routes>
   );

@@ -5,9 +5,9 @@ function Content({ titulo }) {
         <main>
             <section>
                 {titulo && (
-                    <h2>
+                    <h1>
                         {titulo}
-                    </h2>
+                    </h1>
                 )}
                 <Outlet />
             </section>
