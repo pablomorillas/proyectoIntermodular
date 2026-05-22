@@ -135,6 +135,53 @@ a {
   image-rendering: auto;
 }
 
+.user-menu-wrapper {
+  position: relative;
+  justify-self: end;
+}
+
+.user-name {
+  display: none;
+}
+
+.user-dropdown {
+  position: absolute;
+  top: 56px;
+  right: 0;
+  min-width: 160px;
+  background: #fff;
+  border: 1px solid #d0d0d0;
+  border-radius: 6px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+  z-index: 200;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.user-dropdown a,
+.user-dropdown button {
+  padding: 10px 14px;
+  font-size: 0.9rem;
+  color: #1d1d1d;
+  background: none;
+  border: none;
+  text-align: left;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.user-dropdown a:hover,
+.user-dropdown button:hover {
+  background: #f2f2f2;
+}
+
+.auth-error {
+  color: #c81619;
+  font-size: 0.82rem;
+  margin: 0;
+}
+
 .nav-main {
   background: var(--color-primary);
   color: #fff;

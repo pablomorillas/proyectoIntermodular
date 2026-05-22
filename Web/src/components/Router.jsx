@@ -8,6 +8,7 @@ import Contact from "../pages/Contact";
 import ErrorPage from "../pages/ErrorPage";
 import Login from "../pages/Login";
 import Register from "../pages/Register";
+import Profile from "../pages/Profile";
 
 function AppRouter() {
   return (
@@ -22,6 +23,7 @@ function AppRouter() {
         <Route path="/respuestas" element={<Responses />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/contacto" element={<Navigate to="/contact" replace />} />
+        <Route path="/perfil" element={<Profile />} />
         <Route path="/error" element={<ErrorPage />} />
         <Route path="/404" element={<Navigate to="/error" replace />} />
         <Route path="*" element={<ErrorPage />} />

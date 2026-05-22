@@ -1,14 +1,37 @@
+import { useEffect, useState } from "react";
 import RequestCard from "../components/RequestCard.jsx";
-import requests from "../data/requests.js";
+import { getSolicitudesPublicas } from "../api/client.js";
 
 function Home() {
-  const featuredRequests = requests.slice(0, 3);
+  const [solicitudes, setSolicitudes] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    let cancelled = false;
+    getSolicitudesPublicas()
+      .then((data) => {
+        if (!cancelled) {
+          setSolicitudes(data.slice(0, 3));
+          setLoading(false);
+        }
+      })
+      .catch(() => {
+        if (!cancelled) {
+          setError("No se pudieron cargar las solicitudes.");
+          setLoading(false);
+        }
+      });
+    return () => { cancelled = true; };
+  }, []);
+
+  const featuredRequests = solicitudes;
 
   return (
     <main id="main-content" className="page-main home-page">
       <section className="hero-section" aria-label="Destacado">
         <div className="hero-copy">
-          <h2>Productos mas interesantes</h2>
+          <h2>Solicitudes destacadas</h2>
         </div>
 
         <div className="hero-media">
@@ -20,12 +43,14 @@ function Home() {
       </section>
 
       <section className="cards-grid" aria-label="Productos destacados">
-        {featuredRequests.map((request) => (
+        {loading && <p>Cargando...</p>}
+        {error && <p className="auth-error" role="alert">{error}</p>}
+        {!loading && !error && featuredRequests.map((request) => (
           <RequestCard
             key={request.id}
             titulo={request.titulo}
-            descripcion={request.descripcion}
-            imagen={request.imagen}
+            descripcion={request.contenido}
+            imagen={request.imagenes?.[0] || ""}
           />
         ))}
       </section>

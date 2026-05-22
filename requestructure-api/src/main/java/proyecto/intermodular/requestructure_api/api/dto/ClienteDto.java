@@ -9,7 +9,6 @@ public record ClienteDto(
         String username,
         String email,
         String direccion,
-        String password,
         List<Long> solicitudesIds
 ) {
     public static ClienteDto fromDomain(Cliente cliente) {
@@ -18,7 +17,6 @@ public record ClienteDto(
                 cliente.getUsername(),
                 cliente.getEmail(),
                 cliente.getDireccion(),
-                cliente.getPassword(),
                 cliente.getSolicitudes().stream()
                         .map(solicitud -> solicitud.getId())
                         .toList()

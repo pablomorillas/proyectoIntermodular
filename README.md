@@ -2,6 +2,55 @@
 
 **Autor:** Pablo Morillas Esteve
 
+## Tecnologias
+
+- **Web:** React 19 + Vite
+- **API:** Spring Boot + Gradle + MySQL
+- **Movil:** Android nativo + Kotlin + Jetpack Compose
+
+## Como ejecutar el proyecto
+
+### 1. API (requestructure-api)
+
+Requisitos: Java 21 y MySQL corriendo localmente.
+
+```bash
+cd requestructure-api
+./gradlew bootRun
+```
+
+La API se levanta en `http://localhost:8080`.
+
+Variables de entorno opcionales:
+- `DB_URL` — URL de conexion JDBC (por defecto: `jdbc:mysql://localhost:3306/requestructure_db`)
+- `DB_USER` / `DB_PASSWORD` — credenciales MySQL
+
+### 2. Web
+
+Requisitos: Node.js 18+
+
+```bash
+cd Web
+npm install
+npm run dev
+```
+
+Se abre en `http://localhost:5173` y consume la API en `http://localhost:8080`.
+
+### 3. Movil
+
+Abrir la carpeta `Movil/` en Android Studio y ejecutar sobre un emulador o dispositivo fisico.
+
+## Endpoints principales de la API
+
+| Recurso | Endpoints |
+|---------|-----------|
+| Clientes | `GET /clientes`, `POST /clientes`, `POST /clientes/login`, `PUT /clientes/{id}`, `DELETE /clientes/{id}` |
+| Empresas | `GET /empresas`, `POST /empresas`, `PUT /empresas/{id}`, `DELETE /empresas/{id}` |
+| Solicitudes | `GET /solicitudes`, `GET /solicitudes/publicas`, `POST /solicitudes`, `PUT /solicitudes/{id}`, `DELETE /solicitudes/{id}` |
+| Respuestas | `GET /respuestas`, `POST /respuestas`, `PATCH /respuestas/{id}/estado`, `DELETE /respuestas/{id}` |
+| Comentarios | `POST /solicitudes/{id}/comentarios`, `POST /respuestas/{id}/comentarios` |
+
 ## Indice
 
 1. [Planteamiento del problema y justificacion](Docs/planteamiento.md)

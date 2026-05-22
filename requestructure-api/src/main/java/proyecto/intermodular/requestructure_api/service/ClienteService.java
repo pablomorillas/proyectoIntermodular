@@ -84,13 +84,22 @@ public class ClienteService {
         clienteRepository.deleteById(id);
     }
 
+    @Transactional(readOnly = true)
+    public ClienteDto login(String email, String password) {
+        Cliente cliente = clienteRepository.findByEmail(email.trim().toLowerCase())
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Credenciales incorrectas"));
+        if (!cliente.getPassword().equals(password)) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Credenciales incorrectas");
+        }
+        return toDto(cliente);
+    }
+
     private ClienteDto toDto(Cliente cliente) {
         return new ClienteDto(
                 cliente.getId(),
                 cliente.getUsername(),
                 cliente.getEmail(),
                 cliente.getDireccion(),
-                cliente.getPassword(),
                 cliente.getSolicitudes().stream().map(s -> s.getId()).toList()
         );
     }

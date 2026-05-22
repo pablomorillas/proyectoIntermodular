@@ -1,8 +1,29 @@
+import { useEffect, useState } from "react";
 import RequestCard from "../components/RequestCard.jsx";
-import requests from "../data/requests.js";
+import { getSolicitudesPublicas } from "../api/client.js";
 
 function Requests() {
-  const generalRequests = requests.filter((req) => req.tipo === "general");
+  const [solicitudes, setSolicitudes] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    let cancelled = false;
+    getSolicitudesPublicas()
+      .then((data) => {
+        if (!cancelled) {
+          setSolicitudes(data);
+          setLoading(false);
+        }
+      })
+      .catch(() => {
+        if (!cancelled) {
+          setError("No se pudieron cargar las solicitudes.");
+          setLoading(false);
+        }
+      });
+    return () => { cancelled = true; };
+  }, []);
 
   return (
     <main id="main-content" className="page-main">
@@ -14,16 +35,19 @@ function Requests() {
       <section className="forum-section" aria-label="Solicitudes del foro">
         <div className="forum-section-head">
           <h2>Solicitudes</h2>
-          <span>{generalRequests.length} publicaciones</span>
+          <span>{solicitudes.length} publicaciones</span>
         </div>
 
+        {loading && <p>Cargando...</p>}
+        {error && <p className="auth-error" role="alert">{error}</p>}
+
         <div className="cards-grid">
-          {generalRequests.map((req) => (
+          {!loading && !error && solicitudes.map((req) => (
             <RequestCard
               key={req.id}
               titulo={req.titulo}
-              descripcion={req.descripcion}
-              imagen={req.imagen}
+              descripcion={req.contenido}
+              imagen={req.imagenes?.[0] || ""}
             />
           ))}
         </div>

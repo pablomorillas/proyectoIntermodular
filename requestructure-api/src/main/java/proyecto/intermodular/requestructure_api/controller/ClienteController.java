@@ -3,6 +3,7 @@ package proyecto.intermodular.requestructure_api.controller;
 import jakarta.validation.Valid;
 import proyecto.intermodular.requestructure_api.api.dto.ClienteDto;
 import proyecto.intermodular.requestructure_api.api.dto.request.CreateClienteRequest;
+import proyecto.intermodular.requestructure_api.api.dto.request.LoginRequest;
 import proyecto.intermodular.requestructure_api.api.dto.request.UpdateClienteRequest;
 import proyecto.intermodular.requestructure_api.service.ClienteService;
 import org.springframework.http.HttpStatus;
@@ -29,6 +30,11 @@ public class ClienteController {
     @GetMapping("/{id}")
     public ResponseEntity<ClienteDto> findById(@PathVariable Long id) {
         return ResponseEntity.ok(clienteService.findById(id));
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<ClienteDto> login(@Valid @RequestBody LoginRequest req) {
+        return ResponseEntity.ok(clienteService.login(req.email(), req.password()));
     }
 
     @PostMapping
