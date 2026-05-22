@@ -14,6 +14,6 @@ El objetivo principal a nivel de empresa es desarrollar una aplicación que func
 
 ### Objetivo adicional
 
-Definir un control más eficiente para los empleados que tengan acceso administrativo, incluyendo:
+Definir un control más eficiente para los usuarios que tengan acceso administrativo, incluyendo:
 
 - Roles para la aplicación.

@@ -6,7 +6,7 @@ Para garantizar la máxima accesibilidad, elegimos iconos de Google Fonts. La ra
 
 ### La Tipografía Elegida: Inter
 
-Nos decantamos por la fuente Inter porque está optimizada de principio a fin para pantallas digitales, lo cual es crucial para la lectura. Sus características — como una altura de 'x' elevada (que mejora la distinción de las minúsculas), sus funcionalidades OpenType avanzadas y su naturaleza variable — la convierten en una opción extremadamente legible y adaptable en cualquier interfaz de usuario. Esta elección está alineada con las recomendaciones de expertos en diseño como LowPrint, Inafargas y Figma.
+Nos decantamos por la fuente Inter porque está optimizada de principio a fin para pantallas digitales, lo cual es crucial para la lectura. Sus características como una altura de 'x' elevada (que mejora la distinción de las minúsculas), sus características hacen que sea una fuente muy cómoda de leer en pantallas. La convierten en una opción extremadamente legible y adaptable en cualquier interfaz de usuario. Esta elección está alineada con las recomendaciones de expertos en diseño como LowPrint, Inafargas y Figma.
 
 ### Uso Estratégico del Color
 

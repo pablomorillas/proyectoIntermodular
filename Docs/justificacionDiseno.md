@@ -12,7 +12,7 @@ El diseño de la aplicación se ha desarrollado siguiendo los principios de usab
 
 - **Visibilidad del estado del sistema:** El usuario recibe retroalimentación clara al realizar acciones como crear una solicitud o responder a un presupuesto.
 
-- **Control y libertad:** Los usuarios pueden modificar su perfil, cancelar o editar encargos, garantizando que puedan corregir errores fácilmente.
+- **Control y libertad:** Los usuarios pueden modificar su perfil, cancelar o editar solicitudes, garantizando que puedan corregir errores fácilmente.
 
 - **Correspondencia con el mundo real:** Los términos y símbolos utilizados (solicitudes, presupuestos y empresas) reflejan la terminología del sector de la construcción.
 
@@ -26,6 +26,6 @@ El diseño de la aplicación se ha desarrollado siguiendo los principios de usab
 
 ### Estándares de accesibilidad
 
-- **Visibilidad del estado del sistema:** Las confirmaciones y actualizaciones de stock o presupuestos se muestran de manera clara.
+- **Visibilidad del estado del sistema:** Las confirmaciones y actualizaciones de solicitudes o presupuestos se muestran de manera clara.
 
 - **Correspondencia con el mundo real:** Los términos y símbolos utilizados (solicitudes, presupuestos y empresas) reflejan la terminología del sector de la construcción.
