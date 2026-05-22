@@ -1,9 +1,14 @@
 package com.project.proyectointermodularapp.ui.screen
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
 import androidx.lifecycle.viewModelScope
-import com.project.proyectointermodularapp.data.repository.RequestRepository
+import androidx.lifecycle.viewmodel.initializer
+import androidx.lifecycle.viewmodel.viewModelFactory
+import com.project.proyectointermodularapp.ProyectoIntermodularApplication
 import com.project.proyectointermodularapp.data.repository.FakeRequestRepository
+import com.project.proyectointermodularapp.data.repository.RequestRepository
 import com.project.proyectointermodularapp.domain.model.RequestModel
 import com.project.proyectointermodularapp.domain.model.ClienteModel
 import com.project.proyectointermodularapp.domain.model.CommentModel
@@ -46,6 +51,16 @@ class RequestViewModel(
     fun setViewerSession(viewerSession: ViewerSession) {
         _uiState.value = _uiState.value.copy(viewerSession = viewerSession)
         rebuildUiStateFromCache()
+    }
+
+    fun login(email: String, password: String): Boolean {
+        val client = clientesCache.firstOrNull { client ->
+            client.email.equals(email.trim(), ignoreCase = true) &&
+                client.password == password
+        } ?: return false
+
+        setViewerSession(ViewerSession.Cliente(id = client.id))
+        return true
     }
 
     fun createRequest(
@@ -309,5 +324,15 @@ class RequestViewModel(
             listOf(comment) + flattenSolicitudComments(comment.respuestas)
         }
     }
-}
 
+    companion object {
+        val Factory: ViewModelProvider.Factory = viewModelFactory {
+            initializer {
+                val application = this[APPLICATION_KEY] as ProyectoIntermodularApplication
+                RequestViewModel(
+                    repository = application.container.requestRepository
+                )
+            }
+        }
+    }
+}

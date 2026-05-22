@@ -36,6 +36,7 @@ import com.project.proyectointermodularapp.ui.theme.Red
 
 @Composable
 fun LoginScreen(
+    loginErrorMessage: String? = null,
     onLoginClick: (String, String) -> Unit,
     onRegisterClick: () -> Unit,
     onGuestClick: () -> Unit
@@ -121,6 +122,17 @@ fun LoginScreen(
         )
 
         Spacer(modifier = Modifier.height(24.dp))
+
+        loginErrorMessage?.let { message ->
+            Text(
+                text = message,
+                color = MaterialTheme.colorScheme.error,
+                style = MaterialTheme.typography.bodyMedium,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 12.dp)
+            )
+        }
 
         Button(
             onClick = {

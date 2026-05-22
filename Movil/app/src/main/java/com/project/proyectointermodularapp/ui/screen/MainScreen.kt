@@ -87,7 +87,7 @@ fun ProyectoIntermodularAppBar(
 
 @Composable
 fun MainScreen(
-    requestViewModel: RequestViewModel = viewModel(),
+    requestViewModel: RequestViewModel = viewModel(factory = RequestViewModel.Factory),
     navController: NavHostController = rememberNavController()
 ) {
     val uiState by requestViewModel.uiState.collectAsState()
@@ -95,6 +95,7 @@ fun MainScreen(
     val companyRequestsCount = uiState.requests.sumOf { it.responses.size }
     var showCreateRequestGuestPrompt by remember { mutableStateOf(false) }
     var postLoginRoute by remember { mutableStateOf<String?>(null) }
+    var loginErrorMessage by remember { mutableStateOf<String?>(null) }
 
     val currentBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRouteName = currentBackStackEntry?.destination?.route?.substringBefore("/")
@@ -197,19 +198,28 @@ fun MainScreen(
         ) {
             composable(route = AppScreen.Login.name) {
                 LoginScreen(
-                    onLoginClick = { _, _ ->
-                        requestViewModel.setViewerSession(ViewerSession.Cliente(id = 1))
-                        val destination = postLoginRoute ?: AppScreen.Home.name
-                        postLoginRoute = null
-                        navController.navigate(destination) {
-                            popUpTo(AppScreen.Login.name) { inclusive = true }
-                            launchSingleTop = true
+                    loginErrorMessage = loginErrorMessage,
+                    onLoginClick = { email, password ->
+                        if (uiState.isLoading) {
+                            loginErrorMessage = "Espera un momento mientras se cargan los datos."
+                        } else if (requestViewModel.login(email, password)) {
+                            loginErrorMessage = null
+                            val destination = postLoginRoute ?: AppScreen.Home.name
+                            postLoginRoute = null
+                            navController.navigate(destination) {
+                                popUpTo(AppScreen.Login.name) { inclusive = true }
+                                launchSingleTop = true
+                            }
+                        } else {
+                            loginErrorMessage = "Email o contrasena incorrectos."
                         }
                     },
                     onRegisterClick = {
+                        loginErrorMessage = null
                         navController.navigate(AppScreen.Register.name)
                     },
                     onGuestClick = {
+                        loginErrorMessage = null
                         postLoginRoute = null
                         requestViewModel.setViewerSession(ViewerSession.Invitado)
                         navController.navigate(AppScreen.Home.name) {
