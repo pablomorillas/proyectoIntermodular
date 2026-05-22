@@ -20,5 +20,6 @@ Thumbs.db
 
 # Web / Node
 /Web/node_modules/
+/Web/.npm-cache/
 /Web/dist/
 /Web/dist-ssr/

@@ -36,6 +36,15 @@ function Nav() {
             Respuestas
           </NavLink>
         </li>
+
+        <li className="nav-item nav-item-login">
+          <NavLink
+            to="/login"
+            className={({ isActive }) => `nav-link${isActive ? " active" : ""}`}
+          >
+            Entrar
+          </NavLink>
+        </li>
       </ul>
     </nav>
   );

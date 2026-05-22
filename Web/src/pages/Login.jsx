@@ -29,6 +29,10 @@ function Login() {
               </button>
             </form>
 
+            <Link to="/" className="guest-login-link">
+              Entrar como invitado
+            </Link>
+
             <p className="auth-note">
               No tienes una cuenta? <Link to="/register">Registrate</Link>
             </p>
