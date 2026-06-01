@@ -2,6 +2,8 @@
 
 **Autor:** Pablo Morillas Esteve
 
+**Web desplegada:** [https://proyecto-intermodular-five.vercel.app/](https://proyecto-intermodular-five.vercel.app/)
+
 ## Tecnologias
 
 - **Web:** React 19 + Vite
@@ -53,6 +55,17 @@ Abrir la carpeta `Movil/` en Android Studio y ejecutar sobre un emulador o dispo
 | Solicitudes | `GET /solicitudes`, `GET /solicitudes/publicas`, `POST /solicitudes`, `PUT /solicitudes/{id}`, `DELETE /solicitudes/{id}` |
 | Respuestas | `GET /respuestas`, `POST /respuestas`, `PATCH /respuestas/{id}/estado`, `DELETE /respuestas/{id}` |
 | Comentarios | `POST /solicitudes/{id}/comentarios`, `POST /respuestas/{id}/comentarios` |
+
+## Diagramas del proyecto
+
+### Arbol de navegacion
+![Arbol de navegacion](Docs/imagenes/diseno_arbolNavegacion.png)
+
+### Casos de uso
+![Casos de uso](Docs/imagenes/casosDeUso.png)
+
+### Diagrama EER
+![Diagrama EER](Docs/imagenes/diagramaEER.png)
 
 ## Indice
 

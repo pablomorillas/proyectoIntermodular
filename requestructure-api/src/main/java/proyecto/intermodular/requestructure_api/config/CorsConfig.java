@@ -17,8 +17,7 @@ public class CorsConfig {
                         .allowedOrigins(
                                 "http://localhost:5173",
                                 "http://localhost:4173",
-                                "https://proyecto-intermodular-j9diccjjy-pablomorillas-projects.vercel.app",
-                                "https://proyecto-intermodular.vercel.app"
+                                "https://proyecto-intermodular-five.vercel.app"
                         )
                         .allowedMethods("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS")
                         .allowedHeaders("*")
