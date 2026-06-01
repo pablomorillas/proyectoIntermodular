@@ -51,8 +51,8 @@ public class ClienteService {
         }
 
         Cliente cliente = new Cliente();
-        cliente.setUsername(req.username());
-        cliente.setEmail(req.email());
+        cliente.setUsername(req.username().trim());
+        cliente.setEmail(req.email().trim().toLowerCase());
         cliente.setDireccion(req.direccion());
         cliente.setPassword(req.password());
 
@@ -68,8 +68,8 @@ public class ClienteService {
         Cliente cliente = clienteRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "No existe el cliente " + id));
 
-        cliente.setUsername(req.username());
-        cliente.setEmail(req.email());
+        cliente.setUsername(req.username().trim());
+        cliente.setEmail(req.email().trim().toLowerCase());
         cliente.setDireccion(req.direccion());
         cliente.setPassword(req.password());
 
