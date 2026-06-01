@@ -16,6 +16,20 @@ data class EntityRefDto(
 )
 
 @Serializable
+data class LoginRequestDto(
+    @SerialName("email") val email: String,
+    @SerialName("password") val password: String
+)
+
+@Serializable
+data class CreateClienteRequestDto(
+    @SerialName("username") val username: String,
+    @SerialName("email") val email: String,
+    @SerialName("direccion") val direccion: String,
+    @SerialName("password") val password: String
+)
+
+@Serializable
 data class ClienteDto(
     @SerialName("id") val id: Int = 0,
     @SerialName("username") val username: String = "",

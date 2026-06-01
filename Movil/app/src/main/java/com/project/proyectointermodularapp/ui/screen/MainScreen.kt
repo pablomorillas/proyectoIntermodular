@@ -22,6 +22,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -29,6 +30,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import kotlinx.coroutines.launch
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -96,6 +98,8 @@ fun MainScreen(
     var showCreateRequestGuestPrompt by remember { mutableStateOf(false) }
     var postLoginRoute by remember { mutableStateOf<String?>(null) }
     var loginErrorMessage by remember { mutableStateOf<String?>(null) }
+
+    val coroutineScope = rememberCoroutineScope()
 
     val currentBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRouteName = currentBackStackEntry?.destination?.route?.substringBefore("/")
@@ -202,16 +206,21 @@ fun MainScreen(
                     onLoginClick = { email, password ->
                         if (uiState.isLoading) {
                             loginErrorMessage = "Espera un momento mientras se cargan los datos."
-                        } else if (requestViewModel.login(email, password)) {
-                            loginErrorMessage = null
-                            val destination = postLoginRoute ?: AppScreen.Home.name
-                            postLoginRoute = null
-                            navController.navigate(destination) {
-                                popUpTo(AppScreen.Login.name) { inclusive = true }
-                                launchSingleTop = true
+                            return@LoginScreen
+                        }
+                        coroutineScope.launch {
+                            val success = requestViewModel.login(email, password)
+                            if (success) {
+                                loginErrorMessage = null
+                                val destination = postLoginRoute ?: AppScreen.Home.name
+                                postLoginRoute = null
+                                navController.navigate(destination) {
+                                    popUpTo(AppScreen.Login.name) { inclusive = true }
+                                    launchSingleTop = true
+                                }
+                            } else {
+                                loginErrorMessage = "Email o contrasena incorrectos."
                             }
-                        } else {
-                            loginErrorMessage = "Email o contrasena incorrectos."
                         }
                     },
                     onRegisterClick = {
@@ -235,6 +244,17 @@ fun MainScreen(
                         if (!navController.popBackStack()) {
                             navController.navigate(AppScreen.Login.name) {
                                 launchSingleTop = true
+                            }
+                        }
+                    },
+                    onRegisterSubmit = { nombre, email, password ->
+                        coroutineScope.launch {
+                            val newClient = requestViewModel.register(nombre, email, password)
+                            if (newClient != null) {
+                                navController.navigate(AppScreen.Login.name) {
+                                    popUpTo(AppScreen.Register.name) { inclusive = true }
+                                    launchSingleTop = true
+                                }
                             }
                         }
                     }

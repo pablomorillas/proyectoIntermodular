@@ -53,14 +53,26 @@ class RequestViewModel(
         rebuildUiStateFromCache()
     }
 
-    fun login(email: String, password: String): Boolean {
-        val client = clientesCache.firstOrNull { client ->
-            client.email.equals(email.trim(), ignoreCase = true) &&
-                client.password == password
-        } ?: return false
+    suspend fun login(email: String, password: String): Boolean {
+        return try {
+            val client = repository.login(email, password) ?: return false
+            clientesCache = clientesCache.filter { it.id != client.id } + client
+            setViewerSession(ViewerSession.Cliente(id = client.id))
+            true
+        } catch (_: Exception) {
+            false
+        }
+    }
 
-        setViewerSession(ViewerSession.Cliente(id = client.id))
-        return true
+    suspend fun register(username: String, email: String, password: String, direccion: String = ""): ClienteModel? {
+        return try {
+            val newClient = repository.register(username, email, password, direccion) ?: return null
+            clientesCache = clientesCache + newClient
+            rebuildUiStateFromCache()
+            newClient
+        } catch (_: Exception) {
+            null
+        }
     }
 
     fun createRequest(

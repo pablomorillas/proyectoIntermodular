@@ -32,6 +32,16 @@ class ResilientRequestRepository(
         )
     }
 
+    override suspend fun login(email: String, password: String): ClienteModel? {
+        return runCatching { remoteRepository.login(email, password) }
+            .getOrElse { fallbackRepository.login(email, password) }
+    }
+
+    override suspend fun register(username: String, email: String, password: String, direccion: String): ClienteModel? {
+        return runCatching { remoteRepository.register(username, email, password, direccion) }
+            .getOrElse { fallbackRepository.register(username, email, password, direccion) }
+    }
+
     override suspend fun getRespuestas(): List<RespuestaModel> {
         return getFromRemoteOrFallback(
             remoteCall = { remoteRepository.getRespuestas() },

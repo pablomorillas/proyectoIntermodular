@@ -268,6 +268,25 @@ class FakeRequestRepository : RequestRepository {
 
     override suspend fun getClientes(): List<ClienteModel> = clientes
 
+    override suspend fun login(email: String, password: String): ClienteModel? {
+        return clientes.firstOrNull {
+            it.email.equals(email.trim(), ignoreCase = true) && it.password == password
+        }
+    }
+
+    override suspend fun register(username: String, email: String, password: String, direccion: String): ClienteModel? {
+        if (clientes.any { it.email.equals(email.trim(), ignoreCase = true) }) return null
+        val newId = (clientes.maxOfOrNull { it.id } ?: 0) + 1
+        return ClienteModel(
+            id = newId,
+            username = username.trim(),
+            email = email.trim().lowercase(),
+            direccion = direccion.trim().ifEmpty { "Sin especificar" },
+            password = password,
+            solicitudesIds = emptyList()
+        )
+    }
+
     override suspend fun getEmpresas(): List<EmpresaModel> = empresas
 
     override suspend fun getSolicitudes(): List<SolicitudModel> = solicitudes

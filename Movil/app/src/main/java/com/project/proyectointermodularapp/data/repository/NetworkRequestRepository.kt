@@ -1,5 +1,7 @@
 package com.project.proyectointermodularapp.data.repository
 
+import com.project.proyectointermodularapp.data.network.CreateClienteRequestDto
+import com.project.proyectointermodularapp.data.network.LoginRequestDto
 import com.project.proyectointermodularapp.data.network.RequestructureApiService
 import com.project.proyectointermodularapp.domain.model.ClienteModel
 import com.project.proyectointermodularapp.domain.model.EmpresaModel
@@ -11,6 +13,29 @@ class NetworkRequestRepository(
 ) : RequestRepository {
     override suspend fun getClientes(): List<ClienteModel> {
         return apiService.getClientes().map { it.toDomain() }
+    }
+
+    override suspend fun login(email: String, password: String): ClienteModel? {
+        return try {
+            apiService.login(LoginRequestDto(email.trim().lowercase(), password)).toDomain()
+        } catch (_: Exception) {
+            null
+        }
+    }
+
+    override suspend fun register(username: String, email: String, password: String, direccion: String): ClienteModel? {
+        return try {
+            apiService.createCliente(
+                CreateClienteRequestDto(
+                    username = username.trim(),
+                    email = email.trim().lowercase(),
+                    password = password,
+                    direccion = direccion.trim().ifEmpty { "Sin especificar" }
+                )
+            ).toDomain()
+        } catch (_: Exception) {
+            null
+        }
     }
 
     override suspend fun getEmpresas(): List<EmpresaModel> {

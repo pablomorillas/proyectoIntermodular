@@ -23,7 +23,8 @@ import com.project.proyectointermodularapp.ui.theme.Red
 
 @Composable
 fun RegisterScreen(
-    onLoginClick: () -> Unit
+    onLoginClick: () -> Unit,
+    onRegisterSubmit: (String, String, String) -> Unit
 ) {
 
     val context = LocalContext.current
@@ -116,7 +117,7 @@ fun RegisterScreen(
                     return@Button
                 }
 
-                Toast.makeText(context, "Registro válido", Toast.LENGTH_SHORT).show()
+                onRegisterSubmit(nombre, email, password)
             },
             modifier = Modifier
                 .fillMaxWidth()
