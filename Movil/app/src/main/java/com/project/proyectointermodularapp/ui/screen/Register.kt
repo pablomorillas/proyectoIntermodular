@@ -106,6 +106,11 @@ fun RegisterScreen(
                     return@Button
                 }
 
+                if (password.length < 6) {
+                    Toast.makeText(context, "La contraseña debe tener al menos 6 caracteres", Toast.LENGTH_SHORT).show()
+                    return@Button
+                }
+
                 if (password != confirmPassword) {
                     Toast.makeText(context, "Las contraseñas no coinciden", Toast.LENGTH_SHORT).show()
                     return@Button

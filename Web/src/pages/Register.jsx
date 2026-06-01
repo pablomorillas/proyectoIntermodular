@@ -21,8 +21,8 @@ function Register() {
       setError("Las contrasenas no coinciden.");
       return;
     }
-    if (password.length < 4) {
-      setError("La contrasena debe tener al menos 4 caracteres.");
+    if (password.length < 6) {
+      setError("La contrasena debe tener al menos 6 caracteres.");
       return;
     }
 

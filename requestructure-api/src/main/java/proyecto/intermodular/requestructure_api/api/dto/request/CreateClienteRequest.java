@@ -8,6 +8,6 @@ public record CreateClienteRequest(
         @NotBlank @Size(max = 80) String username,
         @NotBlank @Email @Size(max = 120) String email,
         @NotBlank @Size(max = 200) String direccion,
-        @NotBlank @Size(min = 4, max = 255) String password
+        @NotBlank @Size(min = 6, max = 255) String password
 ) {
 }
