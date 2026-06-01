@@ -1,16 +1,16 @@
 import { Link, useSearchParams } from "react-router-dom";
-import { useSolicitudes } from "../hook/useSolicitudes";
+import { useMisSolicitudes } from "../hook/useMisSolicitudes";
 import { useAuth } from "../context/AuthContext.jsx";
 import GuestAccessNotice from "../components/GuestAccessNotice.jsx";
 import RequestCard from "../components/RequestCard.jsx";
 
 function YourRequests() {
   const { isGuest, user } = useAuth();
-  const { data: solicitudes, loading, error } = useSolicitudes();
+  const { data: solicitudes, loading, error } = useMisSolicitudes(user?.id);
   const [searchParams] = useSearchParams();
   const search = searchParams.get("search") || "";
 
-  let mine = isGuest ? [] : solicitudes.filter((s) => s.clienteId === user?.id);
+  let mine = solicitudes ?? [];
 
   if (search) {
     mine = mine.filter(

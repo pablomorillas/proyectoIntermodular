@@ -108,11 +108,11 @@ CREATE TABLE comentarios_respuesta (
 );
 
 INSERT INTO clientes (id, username, email, direccion, password) VALUES
-    (1, 'lucia.martinez', 'lucia@email.com', 'Calle Mayor 12, Madrid', '123456'),
-    (2, 'javier.romero', 'javier@email.com', 'Calle Prado 23, Madrid', '123456'),
-    (3, 'ines.aguilar', 'ines@email.com', 'Avenida Norte 8, Madrid', '123456'),
-    (4, 'sergio.mena', 'sergio@email.com', 'Calle Sol 99, Madrid', '123456'),
-    (5, 'claudia.vega', 'claudia@email.com', 'Calle Luna 4, Madrid', '123456');
+    (1, 'lucia.martinez', 'lucia@email.com', 'Calle Mayor 12, Madrid', 'g84KhRxsV8MG8CDFQwaVHLSt2f6Oc1EXwZzf9+ia1a0='),
+    (2, 'javier.romero', 'javier@email.com', 'Calle Prado 23, Madrid', 'g84KhRxsV8MG8CDFQwaVHLSt2f6Oc1EXwZzf9+ia1a0='),
+    (3, 'ines.aguilar', 'ines@email.com', 'Avenida Norte 8, Madrid', 'g84KhRxsV8MG8CDFQwaVHLSt2f6Oc1EXwZzf9+ia1a0='),
+    (4, 'sergio.mena', 'sergio@email.com', 'Calle Sol 99, Madrid', 'g84KhRxsV8MG8CDFQwaVHLSt2f6Oc1EXwZzf9+ia1a0='),
+    (5, 'claudia.vega', 'claudia@email.com', 'Calle Luna 4, Madrid', 'g84KhRxsV8MG8CDFQwaVHLSt2f6Oc1EXwZzf9+ia1a0=');
 
 INSERT INTO empresas (id, nombre, email, nif, direccion) VALUES
     (101, 'NovaPaint Empresas', 'contacto@novapaint.com', 'B12345671', 'Poligono Sur 14, Madrid'),

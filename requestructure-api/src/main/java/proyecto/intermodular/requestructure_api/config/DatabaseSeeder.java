@@ -3,6 +3,7 @@ package proyecto.intermodular.requestructure_api.config;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+import proyecto.intermodular.requestructure_api.config.PasswordHasher;
 import proyecto.intermodular.requestructure_api.domain.Cliente;
 import proyecto.intermodular.requestructure_api.domain.ComentarioRespuesta;
 import proyecto.intermodular.requestructure_api.domain.ComentarioSolicitud;
@@ -182,7 +183,7 @@ public class DatabaseSeeder implements CommandLineRunner {
         cliente.setUsername(username);
         cliente.setEmail(email);
         cliente.setDireccion(direccion);
-        cliente.setPassword("123456");
+        cliente.setPassword(PasswordHasher.hash("123456"));
         return cliente;
     }
 

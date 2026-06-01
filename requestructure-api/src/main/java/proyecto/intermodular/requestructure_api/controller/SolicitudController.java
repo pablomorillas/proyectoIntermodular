@@ -22,7 +22,10 @@ public class SolicitudController {
     }
 
     @GetMapping
-    public ResponseEntity<List<SolicitudDto>> findAll() {
+    public ResponseEntity<List<SolicitudDto>> findAll(@RequestParam(required = false) Long clienteId) {
+        if (clienteId != null) {
+            return ResponseEntity.ok(solicitudService.findByClienteId(clienteId));
+        }
         return ResponseEntity.ok(solicitudService.findAll());
     }
 

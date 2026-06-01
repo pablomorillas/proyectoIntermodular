@@ -34,7 +34,7 @@ function SolicitudDetail() {
           <div style={{ marginTop: 8, fontSize: "0.85rem", color: "#555" }}>
             <p><strong>Autor ID:</strong> {solicitud.clienteId}</p>
             <p><strong>Fecha:</strong> {new Date(solicitud.fechaHora).toLocaleString()}</p>
-            <p><strong>Estado:</strong> {solicitud.estado}</p>
+            <p><strong>Estado:</strong> {solicitud.estado || "Desconocido"}</p>
             <p><strong>Privada:</strong> {solicitud.privada ? "Sí" : "No"}</p>
           </div>
 

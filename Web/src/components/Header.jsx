@@ -19,6 +19,19 @@ function Header() {
     setSearchTerm(params.get("search") || "");
   }, [location.search]);
 
+  // Cerrar dropdown al hacer click fuera
+  useEffect(() => {
+    if (!menuOpen) return;
+    const handleClickOutside = (e) => {
+      const wrapper = document.querySelector(".user-menu-wrapper");
+      if (wrapper && !wrapper.contains(e.target)) {
+        setMenuOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [menuOpen]);
+
   const handleSearch = (e) => {
     if (e.key === "Enter") {
       const term = searchTerm.trim();

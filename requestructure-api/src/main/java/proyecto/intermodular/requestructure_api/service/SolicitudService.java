@@ -52,6 +52,14 @@ public class SolicitudService {
                 .toList();
     }
 
+    @Transactional(readOnly = true)
+    public List<SolicitudDto> findByClienteId(Long clienteId) {
+        return solicitudRepository.findAll().stream()
+                .filter(s -> s.getCliente().getId().equals(clienteId))
+                .map(SolicitudDto::fromDomain)
+                .toList();
+    }
+
     @Transactional
     public SolicitudDto create(CreateSolicitudRequest req) {
         if (req == null) {

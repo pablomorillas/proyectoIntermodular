@@ -22,7 +22,10 @@ public class RespuestaController {
     }
 
     @GetMapping
-    public ResponseEntity<List<RespuestaDto>> findAll() {
+    public ResponseEntity<List<RespuestaDto>> findAll(@RequestParam(required = false) Long clienteId) {
+        if (clienteId != null) {
+            return ResponseEntity.ok(respuestaService.findByClienteId(clienteId));
+        }
         return ResponseEntity.ok(respuestaService.findAll());
     }
 

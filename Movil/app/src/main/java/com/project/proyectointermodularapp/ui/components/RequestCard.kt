@@ -77,7 +77,7 @@ fun RequestCard(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = "Por $author · $date",
+                    text = "Por $author Â· $date",
                     style = MaterialTheme.typography.bodySmall,
                     color = Color.Gray
                 )

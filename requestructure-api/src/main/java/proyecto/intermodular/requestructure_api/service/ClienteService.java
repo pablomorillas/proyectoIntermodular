@@ -3,6 +3,7 @@ package proyecto.intermodular.requestructure_api.service;
 import proyecto.intermodular.requestructure_api.api.dto.ClienteDto;
 import proyecto.intermodular.requestructure_api.api.dto.request.CreateClienteRequest;
 import proyecto.intermodular.requestructure_api.api.dto.request.UpdateClienteRequest;
+import proyecto.intermodular.requestructure_api.config.PasswordHasher;
 import proyecto.intermodular.requestructure_api.domain.Cliente;
 import proyecto.intermodular.requestructure_api.repository.ClienteRepository;
 import org.springframework.http.HttpStatus;
@@ -54,7 +55,7 @@ public class ClienteService {
         cliente.setUsername(req.username().trim());
         cliente.setEmail(req.email().trim().toLowerCase());
         cliente.setDireccion(req.direccion());
-        cliente.setPassword(req.password());
+        cliente.setPassword(PasswordHasher.hash(req.password()));
 
         Cliente saved = clienteRepository.save(cliente);
         return toDto(saved);
@@ -68,10 +69,20 @@ public class ClienteService {
         Cliente cliente = clienteRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "No existe el cliente " + id));
 
-        cliente.setUsername(req.username().trim());
-        cliente.setEmail(req.email().trim().toLowerCase());
+        String newEmail = req.email().trim().toLowerCase();
+        String newUsername = req.username().trim();
+
+        if (!newEmail.equals(cliente.getEmail()) && clienteRepository.existsByEmail(newEmail)) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Ya existe un cliente con ese email");
+        }
+        if (!newUsername.equals(cliente.getUsername()) && clienteRepository.existsByUsername(newUsername)) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Ya existe un cliente con ese username");
+        }
+
+        cliente.setUsername(newUsername);
+        cliente.setEmail(newEmail);
         cliente.setDireccion(req.direccion());
-        cliente.setPassword(req.password());
+        cliente.setPassword(PasswordHasher.hash(req.password()));
 
         return toDto(cliente);
     }
@@ -88,7 +99,7 @@ public class ClienteService {
     public ClienteDto login(String email, String password) {
         Cliente cliente = clienteRepository.findByEmail(email.trim().toLowerCase())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Credenciales incorrectas"));
-        if (!cliente.getPassword().equals(password)) {
+        if (!PasswordHasher.matches(password, cliente.getPassword())) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Credenciales incorrectas");
         }
         return toDto(cliente);

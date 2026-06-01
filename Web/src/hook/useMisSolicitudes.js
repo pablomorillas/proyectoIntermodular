@@ -1,20 +1,21 @@
 import { useEffect, useState } from "react";
-import { getSolicitudesPublicas } from "../services/Service";
+import { getSolicitudesByClienteId } from "../services/Service";
 
-export const useSolicitudes = () => {
+export const useMisSolicitudes = (clienteId) => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
+    if (!clienteId) return;
     let cancelled = false;
 
     const fetchSolicitudes = async () => {
       try {
-        const res = await getSolicitudesPublicas();
+        const res = await getSolicitudesByClienteId(clienteId);
         if (!cancelled) setData(res);
       } catch {
-        if (!cancelled) setError("Error al cargar las solicitudes");
+        if (!cancelled) setError("Error al cargar tus solicitudes");
       } finally {
         if (!cancelled) setLoading(false);
       }
@@ -22,7 +23,7 @@ export const useSolicitudes = () => {
 
     fetchSolicitudes();
     return () => { cancelled = true; };
-  }, []);
+  }, [clienteId]);
 
   return { data, loading, error };
 };

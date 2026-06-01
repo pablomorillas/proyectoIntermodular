@@ -18,7 +18,8 @@ class NetworkRequestRepository(
     override suspend fun login(email: String, password: String): ClienteModel? {
         return try {
             apiService.login(LoginRequestDto(email.trim().lowercase(), password)).toDomain()
-        } catch (_: Exception) {
+        } catch (e: Exception) {
+            android.util.Log.e("NetworkRepo", "Login failed: ${e.message}")
             null
         }
     }
@@ -33,7 +34,8 @@ class NetworkRequestRepository(
                     direccion = direccion.trim().ifEmpty { "Sin especificar" }
                 )
             ).toDomain()
-        } catch (_: Exception) {
+        } catch (e: Exception) {
+            android.util.Log.e("NetworkRepo", "Register failed: ${e.message}")
             null
         }
     }

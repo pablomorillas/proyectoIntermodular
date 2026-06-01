@@ -53,6 +53,14 @@ public class RespuestaService {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "No existe la respuesta " + id));
     }
 
+    @Transactional(readOnly = true)
+    public List<RespuestaDto> findByClienteId(Long clienteId) {
+        return respuestaRepository.findAll().stream()
+                .filter(r -> r.getCliente().getId().equals(clienteId))
+                .map(RespuestaDto::fromDomain)
+                .toList();
+    }
+
     @Transactional
     public RespuestaDto create(CreateRespuestaRequest req) {
         if (req == null) {

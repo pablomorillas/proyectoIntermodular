@@ -36,6 +36,10 @@ function CreateRequest() {
       setError("El titulo y la descripcion son obligatorios.");
       return;
     }
+    if (imagen.trim() && !/^https?:\/\/.+\..+/.test(imagen.trim())) {
+      setError("La URL de la imagen no es valida.");
+      return;
+    }
 
     const ok = await addSolicitud({
       clienteId: user.id,

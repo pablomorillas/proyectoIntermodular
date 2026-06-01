@@ -1,5 +1,6 @@
 package proyecto.intermodular.requestructure_api.api.dto;
 
+import proyecto.intermodular.requestructure_api.domain.EstadoSolicitud;
 import proyecto.intermodular.requestructure_api.domain.Solicitud;
 
 import java.time.LocalDateTime;
@@ -13,7 +14,8 @@ public record SolicitudDto(
         LocalDateTime fechaHora,
         List<String> imagenes,
         List<ComentarioSolicitudDto> comentarios,
-        boolean privada
+        boolean privada,
+        EstadoSolicitud estado
 ) {
     public static SolicitudDto fromDomain(Solicitud solicitud) {
         return new SolicitudDto(
@@ -27,7 +29,8 @@ public record SolicitudDto(
                         .filter(comentario -> comentario.getComentarioPadre() == null)
                         .map(ComentarioSolicitudDto::fromDomain)
                         .toList(),
-                solicitud.isPrivada()
+                solicitud.isPrivada(),
+                solicitud.getEstado()
         );
     }
 }

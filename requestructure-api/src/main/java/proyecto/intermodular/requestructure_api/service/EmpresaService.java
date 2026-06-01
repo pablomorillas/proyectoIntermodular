@@ -43,6 +43,12 @@ public class EmpresaService {
         if (req == null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "El cuerpo no puede estar vacio");
         }
+        if (empresaRepository.existsByEmail(req.email())) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Ya existe una empresa con ese email");
+        }
+        if (empresaRepository.existsByNif(req.nif())) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Ya existe una empresa con ese NIF");
+        }
         Empresa empresa = new Empresa();
         empresa.setNombre(req.nombre());
         empresa.setEmail(req.email());
@@ -60,6 +66,13 @@ public class EmpresaService {
         }
         Empresa empresa = empresaRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "No existe la empresa " + id));
+
+        if (!req.email().equals(empresa.getEmail()) && empresaRepository.existsByEmail(req.email())) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Ya existe una empresa con ese email");
+        }
+        if (!req.nif().equals(empresa.getNif()) && empresaRepository.existsByNif(req.nif())) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Ya existe una empresa con ese NIF");
+        }
 
         empresa.setNombre(req.nombre());
         empresa.setEmail(req.email());

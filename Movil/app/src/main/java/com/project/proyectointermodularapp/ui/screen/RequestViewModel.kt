@@ -64,7 +64,7 @@ class RequestViewModel(
         }
     }
 
-    suspend fun register(username: String, email: String, password: String, direccion: String = ""): ClienteModel? {
+    suspend fun register(username: String, email: String, password: String, direccion: String = "Sin especificar"): ClienteModel? {
         return try {
             val newClient = repository.register(username, email, password, direccion) ?: return null
             clientesCache = clientesCache + newClient

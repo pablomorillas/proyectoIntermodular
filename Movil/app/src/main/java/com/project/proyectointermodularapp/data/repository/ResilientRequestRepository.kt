@@ -9,7 +9,6 @@ class ResilientRequestRepository(
     private val remoteRepository: RequestRepository,
     private val fallbackRepository: RequestRepository
 ) : RequestRepository {
-    private var remoteUnavailable = false
 
     override suspend fun getClientes(): List<ClienteModel> {
         return getFromRemoteOrFallback(
@@ -53,14 +52,7 @@ class ResilientRequestRepository(
         remoteCall: suspend () -> T,
         fallbackCall: suspend () -> T
     ): T {
-        if (remoteUnavailable) {
-            return fallbackCall()
-        }
-
         return runCatching { remoteCall() }
-            .getOrElse {
-                remoteUnavailable = true
-                fallbackCall()
-            }
+            .getOrElse { fallbackCall() }
     }
 }

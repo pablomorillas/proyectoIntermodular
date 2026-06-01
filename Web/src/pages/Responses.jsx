@@ -1,12 +1,12 @@
 import { useAuth } from "../context/AuthContext.jsx";
-import { useRespuestas } from "../hook/useRespuestas";
+import { useMisRespuestas } from "../hook/useMisRespuestas";
 import GuestAccessNotice from "../components/GuestAccessNotice.jsx";
 
 function Responses() {
   const { isGuest, user } = useAuth();
-  const { data: respuestas, loading, error } = useRespuestas();
+  const { data: respuestas, loading, error } = useMisRespuestas(user?.id);
 
-  const mine = isGuest ? [] : respuestas.filter((r) => r.clienteId === user?.id);
+  const mine = respuestas ?? [];
 
   if (isGuest) {
     return (

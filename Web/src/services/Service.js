@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = 'https://requestructure-api.onrender.com';
+const API_URL = import.meta.env.VITE_API_URL || 'https://requestructure-api.onrender.com';
 
 export const getSolicitudes = async () => {
   try {
@@ -52,6 +52,18 @@ export const getRespuestas = async () => {
   }
 };
 
+export const getRespuestasByClienteId = async (clienteId) => {
+  try {
+    const res = await axios.get(`${API_URL}/respuestas`, {
+      params: { clienteId }
+    });
+    return res.data ?? [];
+  } catch (error) {
+    console.error("Error al obtener respuestas del cliente:", error);
+    throw new Error(error.response?.data?.message || "No se pudieron cargar tus respuestas.");
+  }
+};
+
 export const loginCliente = async (data) => {
   try {
     const res = await axios.post(`${API_URL}/clientes/login`, data);
@@ -59,6 +71,18 @@ export const loginCliente = async (data) => {
   } catch (error) {
     console.error("Error al iniciar sesion:", error);
     throw new Error(error.response?.data?.message || "Credenciales incorrectas.");
+  }
+};
+
+export const getSolicitudesByClienteId = async (clienteId) => {
+  try {
+    const res = await axios.get(`${API_URL}/solicitudes`, {
+      params: { clienteId }
+    });
+    return res.data ?? [];
+  } catch (error) {
+    console.error("Error al obtener solicitudes del cliente:", error);
+    throw new Error(error.response?.data?.message || "No se pudieron cargar tus solicitudes.");
   }
 };
 

@@ -1,28 +1,27 @@
-import { useRef, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { getRespuestas } from "../services/Service";
 
 export const useRespuestas = () => {
-  const fetched = useRef(false);
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    if (fetched.current) return;
-    fetched.current = true;
+    let cancelled = false;
 
     const fetchRespuestas = async () => {
       try {
         const res = await getRespuestas();
-        setData(res);
+        if (!cancelled) setData(res);
       } catch {
-        setError("Error al cargar las respuestas");
+        if (!cancelled) setError("Error al cargar las respuestas");
       } finally {
-        setLoading(false);
+        if (!cancelled) setLoading(false);
       }
     };
 
     fetchRespuestas();
+    return () => { cancelled = true; };
   }, []);
 
   return { data, loading, error };

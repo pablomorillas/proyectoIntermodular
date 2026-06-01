@@ -98,6 +98,7 @@ fun MainScreen(
     var showCreateRequestGuestPrompt by remember { mutableStateOf(false) }
     var postLoginRoute by remember { mutableStateOf<String?>(null) }
     var loginErrorMessage by remember { mutableStateOf<String?>(null) }
+    var isLoggingIn by remember { mutableStateOf(false) }
 
     val coroutineScope = rememberCoroutineScope()
 
@@ -208,8 +209,11 @@ fun MainScreen(
                             loginErrorMessage = "Espera un momento mientras se cargan los datos."
                             return@LoginScreen
                         }
+                        if (isLoggingIn) return@LoginScreen
+                        isLoggingIn = true
                         coroutineScope.launch {
                             val success = requestViewModel.login(email, password)
+                            isLoggingIn = false
                             if (success) {
                                 loginErrorMessage = null
                                 val destination = postLoginRoute ?: AppScreen.Home.name
