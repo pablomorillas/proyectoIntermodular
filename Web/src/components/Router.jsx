@@ -3,6 +3,7 @@ import { Routes, Route, Navigate } from "react-router-dom";
 import Content from "./Content";
 import YourRequests from "../pages/YourRequests";
 import Requests from "../pages/Requests";
+import SolicitudDetail from "../pages/SolicitudDetail";
 import Responses from "../pages/Responses";
 import Contact from "../pages/Contact";
 import ErrorPage from "../pages/ErrorPage";
@@ -19,6 +20,7 @@ function AppRouter() {
         <Route path="/home" element={<Navigate to="/" replace />} />
 
         <Route path="/solicitudes" element={<Requests />} />
+        <Route path="/solicitudes/:id" element={<SolicitudDetail />} />
         <Route path="/yourRequests" element={<YourRequests />} />
         <Route path="/respuestas" element={<Responses />} />
         <Route path="/contact" element={<Contact />} />

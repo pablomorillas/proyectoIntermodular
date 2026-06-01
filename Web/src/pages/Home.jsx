@@ -26,6 +26,7 @@ function Home() {
         {!loading && !error && featuredRequests.map((request) => (
           <RequestCard
             key={request.id}
+            id={request.id}
             titulo={request.titulo}
             descripcion={request.contenido}
             imagen={request.imagenes?.[0] || ""}

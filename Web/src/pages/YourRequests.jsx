@@ -42,6 +42,7 @@ function YourRequests() {
         {!loading && !error && mine.map((req) => (
           <RequestCard
             key={req.id}
+            id={req.id}
             titulo={req.titulo}
             descripcion={req.contenido}
             imagen={req.imagenes?.[0] || ""}
