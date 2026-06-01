@@ -1,31 +1,33 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext.jsx";
+import { useLogin } from "../hook/useLogin.js";
 import logoImage from "../assets/images/logo-app-header-web.png";
 
 function Login() {
-  const { login } = useAuth();
+  const { setUser } = useAuth();
   const navigate = useNavigate();
+  const { login, loading, error: hookError } = useLogin();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false);
 
   async function handleSubmit(e) {
     e.preventDefault();
     setError("");
-    setLoading(true);
-    try {
-      const ok = await login(email, password);
-      if (ok) {
-        navigate("/");
-      } else {
-        setError("Email o contrasena incorrectos.");
-      }
-    } catch {
-      setError("No se pudo conectar con el servidor.");
-    } finally {
-      setLoading(false);
+    const data = await login(email, password);
+    if (data) {
+      const userData = {
+        id: data.id,
+        username: data.username,
+        email: data.email,
+        direccion: data.direccion,
+      };
+      setUser(userData);
+      localStorage.setItem("requestructure_user", JSON.stringify(userData));
+      navigate("/");
+    } else {
+      setError(hookError || "Email o contrasena incorrectos.");
     }
   }
 
@@ -62,7 +64,7 @@ function Login() {
                 required
               />
 
-              {error && <p className="auth-error" role="alert">{error}</p>}
+              {(error || hookError) && <p className="auth-error" role="alert">{error || hookError}</p>}
 
               <button type="submit" className="auth-btn" disabled={loading}>
                 {loading ? "Cargando..." : "Iniciar sesion"}

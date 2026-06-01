@@ -1,18 +1,17 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { useAuth } from "../context/AuthContext.jsx";
+import { useRegister } from "../hook/useRegister.js";
 import logoImage from "../assets/images/logo-app-header-web.png";
 
 function Register() {
-  const { register } = useAuth();
   const navigate = useNavigate();
+  const { register, loading, error: hookError } = useRegister();
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [passwordRepeat, setPasswordRepeat] = useState("");
   const [direccion, setDireccion] = useState("");
   const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false);
 
   async function handleSubmit(e) {
     e.preventDefault();
@@ -27,19 +26,17 @@ function Register() {
       return;
     }
 
-    setLoading(true);
-    try {
-      await register({
-        username,
-        email,
-        password,
-        direccion: direccion || "Sin especificar",
-      });
+    const ok = await register({
+      username,
+      email,
+      password,
+      direccion: direccion || "Sin especificar",
+    });
+
+    if (ok) {
       navigate("/login");
-    } catch (err) {
-      setError(err.message || "No se pudo registrar. Intenta con otro email.");
-    } finally {
-      setLoading(false);
+    } else {
+      setError(hookError || "No se pudo registrar.");
     }
   }
 
@@ -108,7 +105,7 @@ function Register() {
                 required
               />
 
-              {error && <p className="auth-error" role="alert">{error}</p>}
+              {(error || hookError) && <p className="auth-error" role="alert">{error || hookError}</p>}
 
               <button type="submit" className="auth-btn" disabled={loading}>
                 {loading ? "Registrando..." : "Registrarse"}

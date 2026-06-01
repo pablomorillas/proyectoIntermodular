@@ -1,29 +1,8 @@
-import { useEffect, useState } from "react";
 import RequestCard from "../components/RequestCard.jsx";
-import { getSolicitudesPublicas } from "../api/client.js";
+import { useSolicitudes } from "../hook/useSolicitudes";
 
 function Requests() {
-  const [solicitudes, setSolicitudes] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
-
-  useEffect(() => {
-    let cancelled = false;
-    getSolicitudesPublicas()
-      .then((data) => {
-        if (!cancelled) {
-          setSolicitudes(data);
-          setLoading(false);
-        }
-      })
-      .catch(() => {
-        if (!cancelled) {
-          setError("No se pudieron cargar las solicitudes.");
-          setLoading(false);
-        }
-      });
-    return () => { cancelled = true; };
-  }, []);
+  const { data: solicitudes, loading, error } = useSolicitudes();
 
   return (
     <main id="main-content" className="page-main">
