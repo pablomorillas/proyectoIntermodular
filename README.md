@@ -14,7 +14,11 @@
 
 ### 1. API (requestructure-api)
 
-Requisitos: Java 21.
+Requisitos: Java 21 y MySQL local (o cualquier servidor MySQL accesible).
+
+#### Desarrollo local
+
+Por defecto la API intenta conectar a `localhost:3306`. Asegurate de tener MySQL corriendo localmente y una base de datos `requestructure_db` (o con permisos para crearla).
 
 ```bash
 cd requestructure-api
@@ -23,12 +27,25 @@ cd requestructure-api
 
 La API se levanta en `http://localhost:8080`.
 
-**Variables de entorno obligatorias:**
-- `DB_URL` — URL de conexion JDBC (por defecto apunta a `zephyr.proxy.rlwy.net:45707`)
-- `DB_USER` / `DB_PASSWORD` — credenciales de la base de datos MySQL
+Si usas variables de entorno, copia `.env.example` a `.env` y rellena los valores:
 
-**Despliegue real:**
-Copia `requestructure-api/.env.example` a `.env` y rellena los valores reales. Spring Boot cargara las variables automaticamente.
+```bash
+cp requestructure-api/.env.example requestructure-api/.env
+```
+
+**Variables de entorno locales (ejemplo):**
+- `DB_URL=jdbc:mysql://localhost:3306/requestructure_db?createDatabaseIfNotExist=true&serverTimezone=Europe/Madrid`
+- `DB_USER=root`
+- `DB_PASSWORD=` (tu contrasena local)
+
+#### Despliegue en produccion (Render)
+
+En produccion la API se despliega en Render como contenedor Docker. Las credenciales de la base de datos se inyectan via **variables de entorno del dashboard de Render**:
+
+- `DB_URL` — URL de conexion JDBC a la BD remota (actualmente Railway)
+- `DB_USER` / `DB_PASSWORD` — credenciales de la BD remota
+
+Estas variables sobrescriben los valores por defecto de `application.properties`.
 
 ### 2. Web
 
