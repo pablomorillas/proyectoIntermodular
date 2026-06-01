@@ -24,7 +24,7 @@ cd requestructure-api
 La API se levanta en `http://localhost:8080`.
 
 **Variables de entorno obligatorias:**
-- `DB_URL` — URL de conexion JDBC (por defecto apunta a `54.152.73.116:3306`)
+- `DB_URL` — URL de conexion JDBC (por defecto apunta a `ec2-52-87-108-71.compute-1.amazonaws.com:3306`)
 - `DB_USER` / `DB_PASSWORD` — credenciales de la base de datos MySQL
 
 **Despliegue real:**
