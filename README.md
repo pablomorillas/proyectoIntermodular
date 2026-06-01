@@ -12,7 +12,7 @@
 
 ### 1. API (requestructure-api)
 
-Requisitos: Java 21 y MySQL corriendo localmente.
+Requisitos: Java 21.
 
 ```bash
 cd requestructure-api
@@ -21,9 +21,12 @@ cd requestructure-api
 
 La API se levanta en `http://localhost:8080`.
 
-Variables de entorno opcionales:
-- `DB_URL` — URL de conexion JDBC (por defecto: `jdbc:mysql://localhost:3306/requestructure_db`)
-- `DB_USER` / `DB_PASSWORD` — credenciales MySQL
+**Variables de entorno obligatorias:**
+- `DB_URL` — URL de conexion JDBC (por defecto apunta a `54.152.73.116:3306`)
+- `DB_USER` / `DB_PASSWORD` — credenciales de la base de datos MySQL
+
+**Despliegue real:**
+Copia `requestructure-api/.env.example` a `.env` y rellena los valores reales. Spring Boot cargara las variables automaticamente.
 
 ### 2. Web
 

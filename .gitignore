@@ -18,6 +18,9 @@ Thumbs.db
 /Movil/app/.externalNativeBuild/
 /Movil/captures/
 
+# API / Spring Boot
+/requestructure-api/.env
+
 # Web / Node
 /Web/node_modules/
 /Web/.npm-cache/
