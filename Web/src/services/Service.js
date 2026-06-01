@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://54.152.73.116:8080';
+const API_URL = 'https://requestructure-api.onrender.com';
 
 export const getSolicitudes = async () => {
   try {
