@@ -8,6 +8,6 @@ import java.util.List;
 
 public interface SolicitudRepository extends JpaRepository<Solicitud, Long> {
     @Override
-    @EntityGraph(attributePaths = {"cliente", "comentarios", "imagenes"})
+    @EntityGraph(attributePaths = {"cliente", "comentarios"})
     List<Solicitud> findAll();
 }
