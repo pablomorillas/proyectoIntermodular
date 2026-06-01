@@ -1,5 +1,5 @@
-import { Link } from "react-router-dom";
-import { useState } from "react";
+import { Link, useNavigate, useLocation } from "react-router-dom";
+import { useState, useEffect } from "react";
 import Nav from "./Nav.jsx";
 import { useAuth } from "../context/AuthContext.jsx";
 import logoImage from "../assets/images/logo-app-header-web.png";
@@ -9,6 +9,26 @@ import userImage from "../assets/images/icon-user-hires.png";
 function Header() {
   const { user, isGuest, logout } = useAuth();
   const [menuOpen, setMenuOpen] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  // Sincronizar input con URL cuando cambia desde fuera
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    setSearchTerm(params.get("search") || "");
+  }, [location.search]);
+
+  const handleSearch = (e) => {
+    if (e.key === "Enter") {
+      const term = searchTerm.trim();
+      if (term) {
+        navigate(`/solicitudes?search=${encodeURIComponent(term)}`);
+      } else {
+        navigate("/solicitudes");
+      }
+    }
+  };
 
   return (
     <header className="header-shell">
@@ -22,9 +42,12 @@ function Header() {
         <div className="search-box">
           <input
             type="text"
-            placeholder="Buscar"
+            placeholder="Buscar solicitudes..."
             className="search-input-main"
-            aria-label="Buscar"
+            aria-label="Buscar solicitudes"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            onKeyDown={handleSearch}
           />
           <span className="search-icon" aria-hidden="true">
             <img src={searchImage} alt="" />

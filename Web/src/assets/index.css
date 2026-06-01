@@ -494,6 +494,12 @@ a {
   color: #555;
 }
 
+.search-tag {
+  font-size: 0.9rem;
+  color: var(--color-primary);
+  font-style: italic;
+}
+
 .footer-shell {
   margin-top: 32px;
   background: #1f2329;

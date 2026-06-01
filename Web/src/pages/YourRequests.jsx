@@ -1,3 +1,4 @@
+import { useSearchParams } from "react-router-dom";
 import { useSolicitudes } from "../hook/useSolicitudes";
 import { useAuth } from "../context/AuthContext.jsx";
 import GuestAccessNotice from "../components/GuestAccessNotice.jsx";
@@ -6,8 +7,18 @@ import RequestCard from "../components/RequestCard.jsx";
 function YourRequests() {
   const { isGuest, user } = useAuth();
   const { data: solicitudes, loading, error } = useSolicitudes();
+  const [searchParams] = useSearchParams();
+  const search = searchParams.get("search") || "";
 
-  const mine = isGuest ? [] : solicitudes.filter((s) => s.clienteId === user?.id);
+  let mine = isGuest ? [] : solicitudes.filter((s) => s.clienteId === user?.id);
+
+  if (search) {
+    mine = mine.filter(
+      (s) =>
+        s.titulo?.toLowerCase().includes(search.toLowerCase()) ||
+        s.contenido?.toLowerCase().includes(search.toLowerCase())
+    );
+  }
 
   if (isGuest) {
     return (
@@ -37,7 +48,11 @@ function YourRequests() {
 
       <section className="cards-grid" aria-label="Tus solicitudes">
         {!loading && !error && mine.length === 0 && (
-          <p>Aun no has creado ninguna solicitud.</p>
+          <p>
+            {search
+              ? "No se encontraron solicitudes que coincidan con tu busqueda."
+              : "Aun no has creado ninguna solicitud."}
+          </p>
         )}
         {!loading && !error && mine.map((req) => (
           <RequestCard
