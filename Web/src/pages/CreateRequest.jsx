@@ -93,14 +93,31 @@ function CreateRequest() {
             placeholder="https://ejemplo.com/imagen.jpg"
           />
 
-          <label style={{ display: "flex", alignItems: "center", gap: 8, marginTop: 8, cursor: "pointer" }}>
+          <label htmlFor="create-private" style={{ marginTop: 8 }}>Visibilidad</label>
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: 10,
+              padding: "10px 12px",
+              border: "1px solid #ccc",
+              borderRadius: 6,
+              background: "#fff",
+              cursor: "pointer",
+            }}
+            onClick={() => setPrivada((v) => !v)}
+          >
             <input
+              id="create-private"
               type="checkbox"
               checked={privada}
               onChange={(e) => setPrivada(e.target.checked)}
+              style={{ width: 18, height: 18, cursor: "pointer", margin: 0 }}
             />
-            <span>Solicitud privada (solo tu podras verla)</span>
-          </label>
+            <span style={{ fontSize: "0.95rem", color: "#1f1f1f" }}>
+              Solicitud privada (solo tu podras verla)
+            </span>
+          </div>
 
           {(error || hookError) && (
             <p className="auth-error" role="alert">{error || hookError}</p>
