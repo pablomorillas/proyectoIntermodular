@@ -119,7 +119,7 @@ function CreateRequest() {
               style={{ width: 18, height: 18, cursor: "pointer", margin: 0 }}
             />
             <span style={{ fontSize: "0.95rem", color: "#1f1f1f" }}>
-              Solicitud privada (solo tu podras verla)
+              Solicitud privada (solo tu y las empresas podreis verla)
             </span>
           </div>
 

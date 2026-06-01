@@ -35,7 +35,7 @@ function SolicitudDetail() {
             <p><strong>Autor ID:</strong> {solicitud.clienteId}</p>
             <p><strong>Fecha:</strong> {new Date(solicitud.fechaHora).toLocaleString()}</p>
             <p><strong>Estado:</strong> {solicitud.estado || "Desconocido"}</p>
-            <p><strong>Privada:</strong> {solicitud.privada ? "Sí" : "No"}</p>
+            <p><strong>Visibilidad:</strong> {solicitud.privada ? "Privada (solo tu y las empresas)" : "Publica"}</p>
           </div>
 
           <p className="card-simple-description" style={{ marginTop: 16 }}>
