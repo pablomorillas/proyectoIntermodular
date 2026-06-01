@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import RequestCard from "../components/RequestCard.jsx";
 import { useSolicitudes } from "../hook/useSolicitudes";
 
@@ -14,9 +15,9 @@ function Home() {
 
         <div className="hero-media">
           <div className="hero-image-placeholder" role="img" aria-label="Imagen destacada pendiente" />
-          <button type="button" className="hero-action-btn">
-            Ver mas
-          </button>
+          <Link to="/solicitudes/nueva" className="hero-action-btn" style={{ textDecoration: "none", display: "inline-flex", alignItems: "center", justifyContent: "center" }}>
+            Crear solicitud
+          </Link>
         </div>
       </section>
 

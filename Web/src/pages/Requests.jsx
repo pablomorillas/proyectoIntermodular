@@ -1,4 +1,4 @@
-import { useSearchParams } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import RequestCard from "../components/RequestCard.jsx";
 import { useSolicitudes } from "../hook/useSolicitudes";
 
@@ -28,6 +28,9 @@ function Requests() {
           {search && (
             <span className="search-tag">Filtrando por: "{search}"</span>
           )}
+          <Link to="/solicitudes/nueva" className="primary-link-btn" style={{ marginLeft: "auto" }}>
+            Crear solicitud
+          </Link>
         </div>
 
         {loading && <p>Cargando...</p>}

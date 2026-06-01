@@ -1,4 +1,4 @@
-import { useSearchParams } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import { useSolicitudes } from "../hook/useSolicitudes";
 import { useAuth } from "../context/AuthContext.jsx";
 import GuestAccessNotice from "../components/GuestAccessNotice.jsx";
@@ -38,9 +38,14 @@ function YourRequests() {
 
   return (
     <main id="main-content" className="page-main">
-      <section className="page-heading">
-        <h2>Tus solicitudes</h2>
-        <p>Espacio reservado para consultar y crear tus propias publicaciones.</p>
+      <section className="page-heading" style={{ display: "flex", alignItems: "baseline", justifyContent: "space-between", gap: 12, flexWrap: "wrap" }}>
+        <div>
+          <h2>Tus solicitudes</h2>
+          <p>Espacio reservado para consultar y crear tus propias publicaciones.</p>
+        </div>
+        <Link to="/solicitudes/nueva" className="primary-link-btn">
+          Crear solicitud
+        </Link>
       </section>
 
       {loading && <p>Cargando...</p>}
