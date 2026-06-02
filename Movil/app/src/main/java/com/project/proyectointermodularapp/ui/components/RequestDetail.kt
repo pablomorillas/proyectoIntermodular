@@ -17,12 +17,12 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import com.project.proyectointermodularapp.domain.model.RequestModel
+import com.project.proyectointermodularapp.ui.theme.AlmosWhite
 import com.project.proyectointermodularapp.ui.theme.Grey
 import com.project.proyectointermodularapp.ui.theme.Red
 
@@ -68,7 +68,7 @@ fun RequestDetail(
             Text(
                 text = "Por ${request.author} - ${request.date}",
                 style = MaterialTheme.typography.bodySmall,
-                color = Color.Gray
+                color = Grey
             )
 
             Spacer(Modifier.height(16.dp))
@@ -155,7 +155,7 @@ fun RequestDetail(
                 modifier = Modifier.fillMaxWidth(),
                 colors = ButtonDefaults.buttonColors(
                     containerColor = if (canComment) Red else Grey,
-                    contentColor = Color.White
+                    contentColor = AlmosWhite
                 )
             ) {
                 Text(

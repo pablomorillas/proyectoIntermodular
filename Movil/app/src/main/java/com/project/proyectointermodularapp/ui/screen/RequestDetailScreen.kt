@@ -19,12 +19,12 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.project.proyectointermodularapp.domain.model.ViewerSession
 import com.project.proyectointermodularapp.ui.components.RequestDetail
+import com.project.proyectointermodularapp.ui.theme.AlmosWhite
 import com.project.proyectointermodularapp.ui.theme.Grey
 import com.project.proyectointermodularapp.ui.theme.Red
 
@@ -135,7 +135,7 @@ fun RequestDetailScreen(
                     },
                     colors = ButtonDefaults.buttonColors(
                         containerColor = Red,
-                        contentColor = Color.White
+                        contentColor = AlmosWhite
                     )
                 ) {
                     Text("Iniciar sesion")
@@ -146,7 +146,7 @@ fun RequestDetailScreen(
                     onClick = { showLoginDialog = false },
                     colors = ButtonDefaults.buttonColors(
                         containerColor = Grey,
-                        contentColor = Color.White
+                        contentColor = AlmosWhite
                     )
                 ) {
                     Text("Mas tarde")

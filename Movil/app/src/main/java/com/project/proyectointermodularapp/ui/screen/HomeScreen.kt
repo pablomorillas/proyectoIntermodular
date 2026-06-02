@@ -78,7 +78,7 @@ fun HomeScreen(
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(AlmosWhite)
+            .background(MaterialTheme.colorScheme.background)
     ) {
         when {
             uiState.isLoading -> {
@@ -151,7 +151,7 @@ fun HomeScreen(
                             text = "Recomendados",
                             style = MaterialTheme.typography.titleLarge,
                             fontWeight = FontWeight.Bold,
-                            color = Color(0xFF1A1A1A)
+                            color = MaterialTheme.colorScheme.onBackground
                         )
                     }
 
@@ -186,8 +186,8 @@ private fun ProfileAvatarPlaceholder() {
         modifier = Modifier
             .size(42.dp)
             .clip(CircleShape)
-            .background(Color(0xFFE9E9E9))
-            .border(1.dp, Color(0xFFD4D4D4), CircleShape),
+            .background(MaterialTheme.colorScheme.surfaceVariant)
+            .border(1.dp, Grey, CircleShape),
         contentAlignment = Alignment.Center
     ) {
         Image(
@@ -221,7 +221,7 @@ private fun AlertResponseCard(
             .clickable { onClick() }
             .border(1.dp, Red, RoundedCornerShape(16.dp)),
         shape = RoundedCornerShape(16.dp),
-        colors = CardDefaults.cardColors(containerColor = Color(0xFFFFEFEF))
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
     ) {
         Column(
             modifier = Modifier.padding(14.dp),
@@ -247,7 +247,7 @@ private fun AlertResponseCard(
             Text(
                 text = "Tienes una respuesta nueva a una peticion.",
                 style = MaterialTheme.typography.bodyMedium,
-                color = Color(0xFF3D3D3D)
+                color = MaterialTheme.colorScheme.onSurfaceVariant
             )
 
             Text(
@@ -279,7 +279,7 @@ private fun HomeRequestCard(
             .fillMaxWidth()
             .clickable { onClick() },
         shape = RoundedCornerShape(16.dp),
-        colors = CardDefaults.cardColors(containerColor = Color.White),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
     ) {
         Column(
@@ -300,7 +300,7 @@ private fun HomeRequestCard(
                 text = request.title,
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Bold,
-                color = Color(0xFF1A1A1A),
+                color = MaterialTheme.colorScheme.onSurface,
                 maxLines = 2,
                 overflow = TextOverflow.Ellipsis
             )
@@ -308,7 +308,7 @@ private fun HomeRequestCard(
             Text(
                 text = request.content,
                 style = MaterialTheme.typography.bodySmall,
-                color = Color(0xFF3D3D3D),
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
                 maxLines = 2,
                 overflow = TextOverflow.Ellipsis
             )

@@ -26,13 +26,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.project.proyectointermodularapp.R
+import com.project.proyectointermodularapp.ui.theme.AlmosWhite
+import com.project.proyectointermodularapp.ui.theme.Red
 
 @Composable
 fun BottomMenu(
@@ -40,16 +40,13 @@ fun BottomMenu(
     companyRequestsCount: Int,
     onItemSelected: (Int) -> Unit
 ) {
-    val customRed = Color(0xFFC61313)
-    val customWhite = Color.White
-
-    Box(modifier = Modifier.background(customRed)) {
+    Box(modifier = Modifier.background(Red)) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(80.dp)
                 .navigationBarsPadding()
-                .background(customRed),
+                .background(Red),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceEvenly
         ) {
@@ -73,7 +70,7 @@ fun BottomMenu(
                         .weight(1f)
                         .fillMaxHeight()
                         .background(
-                            if (isSelected) customWhite else customRed,
+                            if (isSelected) AlmosWhite else Red,
                             RectangleShape
                         )
                         .clickable { onItemSelected(index) },
@@ -84,7 +81,7 @@ fun BottomMenu(
                             painter = painterResource(id = iconRes),
                             contentDescription = null,
                             modifier = Modifier.fillMaxSize(),
-                            tint = if (isSelected) customRed else customWhite
+                            tint = if (isSelected) Red else AlmosWhite
                         )
 
                         if (badgeText != null) {
@@ -92,8 +89,8 @@ fun BottomMenu(
                                 modifier = Modifier
                                     .align(Alignment.TopEnd)
                                     .offset(x = 8.dp, y = (-6).dp),
-                                containerColor = Color(0xFF8B0E0E),
-                                contentColor = customWhite
+                                containerColor = Red,
+                                contentColor = AlmosWhite
                             ) {
                                 Text(
                                     text = badgeText,
