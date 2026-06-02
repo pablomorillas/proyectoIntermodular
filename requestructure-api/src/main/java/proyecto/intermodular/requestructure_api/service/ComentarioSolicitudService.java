@@ -38,7 +38,15 @@ public class ComentarioSolicitudService {
         comentario.setContenido(req.contenido());
         comentario.setFechaHora(LocalDateTime.now());
 
-        solicitud.getComentarios().add(comentario);
+        if (req.comentarioPadreId() != null) {
+            ComentarioSolicitud padre = comentarioRepository.findById(req.comentarioPadreId())
+                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "No existe el comentario padre " + req.comentarioPadreId()));
+            comentario.setComentarioPadre(padre);
+            padre.getRespuestas().add(comentario);
+        } else {
+            solicitud.getComentarios().add(comentario);
+        }
+
         ComentarioSolicitud saved = comentarioRepository.save(comentario);
         return ComentarioSolicitudDto.fromDomain(saved);
     }

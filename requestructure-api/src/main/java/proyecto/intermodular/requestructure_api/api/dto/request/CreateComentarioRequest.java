@@ -5,6 +5,7 @@ import jakarta.validation.constraints.Size;
 
 public record CreateComentarioRequest(
         @NotBlank @Size(max = 80) String autor,
-        @NotBlank @Size(max = 1500) String contenido
+        @NotBlank @Size(max = 1500) String contenido,
+        Long comentarioPadreId
 ) {
 }

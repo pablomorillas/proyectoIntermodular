@@ -22,7 +22,7 @@ public record SolicitudDto(
         return new SolicitudDto(
                 solicitud.getId(),
                 solicitud.getCliente().getId(),
-                solicitud.getCliente().getUsername(),
+                solicitud.getCliente().getUsername() != null ? solicitud.getCliente().getUsername() : "Usuario #" + solicitud.getCliente().getId(),
                 solicitud.getTitulo(),
                 solicitud.getContenido(),
                 solicitud.getFechaHora(),

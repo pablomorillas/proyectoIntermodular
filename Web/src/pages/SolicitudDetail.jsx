@@ -8,9 +8,15 @@ function SolicitudDetail() {
   const { id } = useParams();
   const { data: solicitud, loading, error, refetch } = useSolicitud(id);
   const { user, isGuest } = useAuth();
+
   const [commentText, setCommentText] = useState("");
   const [commentError, setCommentError] = useState("");
   const [sending, setSending] = useState(false);
+
+  const [replyingTo, setReplyingTo] = useState(null);
+  const [replyText, setReplyText] = useState("");
+  const [replyError, setReplyError] = useState("");
+  const [sendingReply, setSendingReply] = useState(false);
 
   async function handleSubmitComment(e) {
     e.preventDefault();
@@ -32,6 +38,102 @@ function SolicitudDetail() {
     } finally {
       setSending(false);
     }
+  }
+
+  async function handleSubmitReply(e, comentarioPadreId) {
+    e.preventDefault();
+    setReplyError("");
+    if (!replyText.trim()) {
+      setReplyError("Escribe una respuesta antes de publicar.");
+      return;
+    }
+    try {
+      setSendingReply(true);
+      await createComentarioSolicitud(id, {
+        autor: user?.username || "Anonimo",
+        contenido: replyText.trim(),
+        comentarioPadreId,
+      });
+      setReplyText("");
+      setReplyingTo(null);
+      refetch();
+    } catch (err) {
+      setReplyError(err.message || "No se pudo publicar la respuesta.");
+    } finally {
+      setSendingReply(false);
+    }
+  }
+
+  function renderComentario(comentario, isReply = false) {
+    return (
+      <article
+        key={comentario.id}
+        style={{
+          marginBottom: 12,
+          padding: 12,
+          background: isReply ? "#efefef" : "#f7f7f7",
+          borderRadius: 6,
+          marginLeft: isReply ? 24 : 0,
+        }}
+      >
+        <p style={{ margin: 0, fontWeight: 700, fontSize: "0.85rem" }}>{comentario.autor}</p>
+        <p style={{ margin: "4px 0 0", fontSize: "0.9rem" }}>{comentario.contenido}</p>
+        <p style={{ margin: "4px 0 0", fontSize: "0.75rem", color: "#888" }}>
+          {new Date(comentario.fechaHora).toLocaleString()}
+        </p>
+
+        {!isGuest && replyingTo !== comentario.id && (
+          <button
+            type="button"
+            onClick={() => { setReplyingTo(comentario.id); setReplyText(""); setReplyError(""); }}
+            style={{
+              marginTop: 6,
+              background: "none",
+              border: "none",
+              color: "var(--color-primary)",
+              cursor: "pointer",
+              fontSize: "0.85rem",
+              fontWeight: 700,
+              padding: 0,
+            }}
+          >
+            Responder
+          </button>
+        )}
+
+        {!isGuest && replyingTo === comentario.id && (
+          <form onSubmit={(e) => handleSubmitReply(e, comentario.id)} style={{ marginTop: 10 }}>
+            <textarea
+              value={replyText}
+              onChange={(e) => setReplyText(e.target.value)}
+              placeholder="Escribe tu respuesta..."
+              rows={3}
+              style={{ width: "100%", padding: 10, borderRadius: 6, border: "1px solid #ccc", fontFamily: "inherit", fontSize: "0.95rem", resize: "vertical" }}
+              maxLength={1500}
+            />
+            {replyError && <p className="auth-error" role="alert" style={{ marginTop: 8 }}>{replyError}</p>}
+            <div style={{ display: "flex", gap: 10, marginTop: 8 }}>
+              <button type="submit" className="auth-btn" disabled={sendingReply} style={{ width: "auto", padding: "0 18px", height: 36, fontSize: "0.85rem" }}>
+                {sendingReply ? "Publicando..." : "Publicar respuesta"}
+              </button>
+              <button
+                type="button"
+                onClick={() => setReplyingTo(null)}
+                style={{ background: "#ddd", border: "none", borderRadius: 6, padding: "0 18px", cursor: "pointer", fontWeight: 700, fontSize: "0.85rem" }}
+              >
+                Cancelar
+              </button>
+            </div>
+          </form>
+        )}
+
+        {comentario.respuestas && comentario.respuestas.length > 0 && (
+          <div style={{ marginTop: 10 }}>
+            {comentario.respuestas.map((respuesta) => renderComentario(respuesta, true))}
+          </div>
+        )}
+      </article>
+    );
   }
 
   return (
@@ -74,15 +176,7 @@ function SolicitudDetail() {
           {solicitud.comentarios && solicitud.comentarios.length > 0 && (
             <section style={{ marginTop: 24, borderTop: "1px solid #d0d0d0", paddingTop: 16 }} aria-label="Comentarios">
               <h3 style={{ margin: "0 0 12px", fontSize: "1.1rem" }}>Comentarios</h3>
-              {solicitud.comentarios.map((comentario) => (
-                <article key={comentario.id} style={{ marginBottom: 12, padding: 12, background: "#f7f7f7", borderRadius: 6 }}>
-                  <p style={{ margin: 0, fontWeight: 700, fontSize: "0.85rem" }}>{comentario.autor}</p>
-                  <p style={{ margin: "4px 0 0", fontSize: "0.9rem" }}>{comentario.contenido}</p>
-                  <p style={{ margin: "4px 0 0", fontSize: "0.75rem", color: "#888" }}>
-                    {new Date(comentario.fechaHora).toLocaleString()}
-                  </p>
-                </article>
-              ))}
+              {solicitud.comentarios.map((comentario) => renderComentario(comentario))}
             </section>
           )}
 
