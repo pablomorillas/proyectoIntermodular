@@ -19,6 +19,7 @@ import proyecto.intermodular.requestructure_api.repository.SolicitudRepository;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Component
 public class DatabaseSeeder implements CommandLineRunner {
