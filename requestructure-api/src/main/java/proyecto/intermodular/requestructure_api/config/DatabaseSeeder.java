@@ -179,19 +179,18 @@ public class DatabaseSeeder implements CommandLineRunner {
     }
 
     private Cliente upsertCliente(String username, String email, String direccion) {
-        return clienteRepository.findByUsername(username)
-                .map(existing -> {
-                    existing.setPassword(PasswordHasher.hash("123456"));
-                    return existing;
-                })
-                .orElseGet(() -> {
-                    Cliente c = new Cliente();
-                    c.setUsername(username);
-                    c.setEmail(email);
-                    c.setDireccion(direccion);
-                    c.setPassword(PasswordHasher.hash("123456"));
-                    return clienteRepository.save(c);
-                });
+        Optional<Cliente> existingOpt = clienteRepository.findByUsername(username);
+        if (existingOpt.isPresent()) {
+            Cliente existing = existingOpt.get();
+            existing.setPassword(PasswordHasher.hash("123456"));
+            return clienteRepository.save(existing);
+        }
+        Cliente c = new Cliente();
+        c.setUsername(username);
+        c.setEmail(email);
+        c.setDireccion(direccion);
+        c.setPassword(PasswordHasher.hash("123456"));
+        return clienteRepository.save(c);
     }
 
     private Empresa upsertEmpresa(String nombre, String email, String nif, String direccion) {

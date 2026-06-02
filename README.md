@@ -6,6 +6,8 @@
 
 **API desplegada:** [https://requestructure-api.onrender.com](https://requestructure-api.onrender.com)
 
+**Base de datos:** MySQL en Railway (`zephyr.proxy.rlwy.net:45707`)
+
 ## Tecnologias
 
 - **Web:** React 19 + Vite
