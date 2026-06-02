@@ -9,6 +9,7 @@ import java.util.List;
 public record SolicitudDto(
         Long id,
         Long clienteId,
+        String clienteUsername,
         String titulo,
         String contenido,
         LocalDateTime fechaHora,
@@ -21,6 +22,7 @@ public record SolicitudDto(
         return new SolicitudDto(
                 solicitud.getId(),
                 solicitud.getCliente().getId(),
+                solicitud.getCliente().getUsername(),
                 solicitud.getTitulo(),
                 solicitud.getContenido(),
                 solicitud.getFechaHora(),

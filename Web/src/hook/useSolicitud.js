@@ -5,6 +5,9 @@ export const useSolicitud = (id) => {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [refresh, setRefresh] = useState(0);
+
+  const refetch = () => setRefresh((prev) => prev + 1);
 
   useEffect(() => {
     if (!id) return;
@@ -27,7 +30,7 @@ export const useSolicitud = (id) => {
 
     fetchSolicitud();
     return () => { cancelled = true; };
-  }, [id]);
+  }, [id, refresh]);
 
-  return { data, loading, error };
+  return { data, loading, error, refetch };
 };
