@@ -19,6 +19,7 @@ import androidx.compose.ui.unit.dp
 import com.project.proyectointermodularapp.R
 import com.project.proyectointermodularapp.ui.theme.AlmosWhite
 import com.project.proyectointermodularapp.ui.theme.Grey
+import com.project.proyectointermodularapp.ui.theme.ProyectoIntermodularAppTheme
 import com.project.proyectointermodularapp.ui.theme.Red
 
 @Composable
@@ -157,8 +158,11 @@ fun RegisterScreen(
 @Preview(showBackground = true)
 @Composable
 fun RegisterScreenPreview() {
-    MaterialTheme {
-        RegisterScreen(onLoginClick = {})
+    ProyectoIntermodularAppTheme {
+        RegisterScreen(
+            onLoginClick = {},
+            onRegisterSubmit = { _, _, _ -> }
+        )
     }
 }
 

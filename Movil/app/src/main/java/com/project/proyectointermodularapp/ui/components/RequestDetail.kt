@@ -34,7 +34,14 @@ fun RequestDetail(
     onNewCommentTextChange: (String) -> Unit,
     onPublishCommentClick: () -> Unit,
     modifier: Modifier = Modifier,
-    topContentPadding: Dp = 0.dp
+    topContentPadding: Dp = 0.dp,
+    canReply: Boolean = false,
+    replyingToCommentId: Int? = null,
+    replyText: String = "",
+    onReplyTextChange: (String) -> Unit = {},
+    onStartReply: (Int) -> Unit = {},
+    onCancelReply: () -> Unit = {},
+    onPublishReply: (Int) -> Unit = {}
 ) {
     LazyColumn(
         modifier = modifier.fillMaxSize(),
@@ -133,7 +140,16 @@ fun RequestDetail(
         } else {
             item {
                 request.comments.forEach { comment ->
-                    CommentItem(comment = comment)
+                    CommentItem(
+                        comment = comment,
+                        canReply = canReply,
+                        replyingToCommentId = replyingToCommentId,
+                        replyText = replyText,
+                        onReplyTextChange = onReplyTextChange,
+                        onStartReply = onStartReply,
+                        onCancelReply = onCancelReply,
+                        onPublishReply = onPublishReply
+                    )
                 }
             }
         }

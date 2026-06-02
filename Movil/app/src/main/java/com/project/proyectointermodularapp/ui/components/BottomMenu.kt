@@ -26,12 +26,15 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.project.proyectointermodularapp.R
 import com.project.proyectointermodularapp.ui.theme.AlmosWhite
+import com.project.proyectointermodularapp.ui.theme.ProyectoIntermodularAppTheme
 import com.project.proyectointermodularapp.ui.theme.Red
 
 @Composable
@@ -110,7 +113,7 @@ fun BottomMenu(
 fun BottomMenuPreview() {
     var selectedIndex by remember { mutableIntStateOf(1) }
 
-    MaterialTheme {
+    ProyectoIntermodularAppTheme {
         Scaffold(
             bottomBar = {
                 BottomMenu(

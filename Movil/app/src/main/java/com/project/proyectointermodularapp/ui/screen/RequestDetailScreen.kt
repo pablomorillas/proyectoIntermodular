@@ -39,6 +39,8 @@ fun RequestDetailScreen(
 
     var commentText by rememberSaveable(requestId) { mutableStateOf("") }
     var showLoginDialog by remember { mutableStateOf(false) }
+    var replyingToCommentId by rememberSaveable(requestId) { mutableStateOf<Int?>(null) }
+    var replyText by rememberSaveable(requestId) { mutableStateOf("") }
 
     when {
         uiState.isLoading -> {
@@ -114,7 +116,49 @@ fun RequestDetailScreen(
                             }
                         }
                     },
-                    modifier = Modifier.fillMaxSize()
+                    modifier = Modifier.fillMaxSize(),
+                    canReply = uiState.viewerSession != ViewerSession.Invitado,
+                    replyingToCommentId = replyingToCommentId,
+                    replyText = replyText,
+                    onReplyTextChange = { replyText = it },
+                    onStartReply = { replyingToCommentId = it },
+                    onCancelReply = {
+                        replyingToCommentId = null
+                        replyText = ""
+                    },
+                    onPublishReply = { parentId ->
+                        when (viewModel.addReplyToComment(requestId, parentId, replyText)) {
+                            AddRequestCommentResult.SUCCESS -> {
+                                replyText = ""
+                                replyingToCommentId = null
+                                Toast.makeText(
+                                    context,
+                                    "Respuesta publicada correctamente.",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            }
+
+                            AddRequestCommentResult.EMPTY_CONTENT -> {
+                                Toast.makeText(
+                                    context,
+                                    "Escribe una respuesta antes de publicar.",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            }
+
+                            AddRequestCommentResult.REQUIRE_LOGIN -> {
+                                showLoginDialog = true
+                            }
+
+                            AddRequestCommentResult.REQUEST_NOT_FOUND -> {
+                                Toast.makeText(
+                                    context,
+                                    "No se encontro la solicitud.",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            }
+                        }
+                    }
                 )
             }
         }
@@ -125,7 +169,7 @@ fun RequestDetailScreen(
             onDismissRequest = { showLoginDialog = false },
             title = { Text("Inicia sesion") },
             text = {
-                Text("Debes iniciar sesion para comentar en una solicitud.")
+                Text("Debes iniciar sesion para participar en una solicitud.")
             },
             confirmButton = {
                 Button(

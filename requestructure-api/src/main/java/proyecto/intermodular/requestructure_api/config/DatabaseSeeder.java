@@ -42,26 +42,26 @@ public class DatabaseSeeder implements CommandLineRunner {
     @Override
     @Transactional
     public void run(String... args) {
-        if (clienteRepository.count() > 0 || solicitudRepository.count() > 0) {
+        List<Cliente> clientes = List.of(
+                upsertCliente("lucia.martinez", "lucia@email.com", "Calle Mayor 12, Madrid"),
+                upsertCliente("javier.romero", "javier@email.com", "Calle Prado 23, Madrid"),
+                upsertCliente("ines.aguilar", "ines@email.com", "Avenida Norte 8, Madrid"),
+                upsertCliente("sergio.mena", "sergio@email.com", "Calle Sol 99, Madrid"),
+                upsertCliente("claudia.vega", "claudia@email.com", "Calle Luna 4, Madrid")
+        );
+
+        List<Empresa> empresas = List.of(
+                upsertEmpresa("NovaPaint Empresas", "contacto@novapaint.com", "B12345671", "Poligono Sur 14, Madrid"),
+                upsertEmpresa("Fachadas Norte", "info@fachadasnorte.com", "B12345672", "Calle Industria 3, Madrid"),
+                upsertEmpresa("Delta Obra", "hola@deltaobra.com", "B12345673", "Avenida Reforma 22, Madrid"),
+                upsertEmpresa("Requestructure Proyectos", "equipo@requestructure.com", "B12345674", "Calle Arquitectura 7, Madrid"),
+                upsertEmpresa("DecoLinea Studio", "contacto@decolinea.com", "B12345675", "Calle Diseno 18, Madrid"),
+                upsertEmpresa("Espacio Vivo", "info@espaciovivo.com", "B12345676", "Avenida Creativa 9, Madrid")
+        );
+
+        if (solicitudRepository.count() > 0) {
             return;
         }
-
-        List<Cliente> clientes = clienteRepository.saveAll(List.of(
-                cliente("lucia.martinez", "lucia@email.com", "Calle Mayor 12, Madrid"),
-                cliente("javier.romero", "javier@email.com", "Calle Prado 23, Madrid"),
-                cliente("ines.aguilar", "ines@email.com", "Avenida Norte 8, Madrid"),
-                cliente("sergio.mena", "sergio@email.com", "Calle Sol 99, Madrid"),
-                cliente("claudia.vega", "claudia@email.com", "Calle Luna 4, Madrid")
-        ));
-
-        List<Empresa> empresas = empresaRepository.saveAll(List.of(
-                empresa("NovaPaint Empresas", "contacto@novapaint.com", "B12345671", "Poligono Sur 14, Madrid"),
-                empresa("Fachadas Norte", "info@fachadasnorte.com", "B12345672", "Calle Industria 3, Madrid"),
-                empresa("Delta Obra", "hola@deltaobra.com", "B12345673", "Avenida Reforma 22, Madrid"),
-                empresa("Requestructure Proyectos", "equipo@requestructure.com", "B12345674", "Calle Arquitectura 7, Madrid"),
-                empresa("DecoLinea Studio", "contacto@decolinea.com", "B12345675", "Calle Diseno 18, Madrid"),
-                empresa("Espacio Vivo", "info@espaciovivo.com", "B12345676", "Avenida Creativa 9, Madrid")
-        ));
 
         Solicitud pintura = solicitud(
                 clientes.get(0),
@@ -91,7 +91,7 @@ public class DatabaseSeeder implements CommandLineRunner {
                 "Reforma integral de piso de 85m2 en Madrid",
                 "Necesito empresa para reforma integral de cocina, bano, suelo y electricidad.",
                 "https://picsum.photos/seed/reforma-integral/800/450",
-                true,
+                false,
                 LocalDateTime.of(2026, 5, 3, 18, 45)
         );
         comentarioSolicitud(
@@ -123,7 +123,7 @@ public class DatabaseSeeder implements CommandLineRunner {
                 "Adecuacion de local comercial y licencia de apertura",
                 "Necesito empresa para adecuar local de 70m2 y tramitar licencia.",
                 "https://picsum.photos/seed/local-comercial/800/450",
-                true,
+                false,
                 LocalDateTime.of(2026, 5, 7, 8, 10)
         );
         comentarioSolicitud(
@@ -178,22 +178,32 @@ public class DatabaseSeeder implements CommandLineRunner {
         ));
     }
 
-    private Cliente cliente(String username, String email, String direccion) {
-        Cliente cliente = new Cliente();
-        cliente.setUsername(username);
-        cliente.setEmail(email);
-        cliente.setDireccion(direccion);
-        cliente.setPassword(PasswordHasher.hash("123456"));
-        return cliente;
+    private Cliente upsertCliente(String username, String email, String direccion) {
+        return clienteRepository.findByUsername(username)
+                .map(existing -> {
+                    existing.setPassword(PasswordHasher.hash("123456"));
+                    return existing;
+                })
+                .orElseGet(() -> {
+                    Cliente c = new Cliente();
+                    c.setUsername(username);
+                    c.setEmail(email);
+                    c.setDireccion(direccion);
+                    c.setPassword(PasswordHasher.hash("123456"));
+                    return clienteRepository.save(c);
+                });
     }
 
-    private Empresa empresa(String nombre, String email, String nif, String direccion) {
-        Empresa empresa = new Empresa();
-        empresa.setNombre(nombre);
-        empresa.setEmail(email);
-        empresa.setNif(nif);
-        empresa.setDireccion(direccion);
-        return empresa;
+    private Empresa upsertEmpresa(String nombre, String email, String nif, String direccion) {
+        return empresaRepository.findByNif(nif)
+                .orElseGet(() -> {
+                    Empresa e = new Empresa();
+                    e.setNombre(nombre);
+                    e.setEmail(email);
+                    e.setNif(nif);
+                    e.setDireccion(direccion);
+                    return empresaRepository.save(e);
+                });
     }
 
     private Solicitud solicitud(

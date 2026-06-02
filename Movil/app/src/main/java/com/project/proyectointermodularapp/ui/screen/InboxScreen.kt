@@ -9,6 +9,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
@@ -21,6 +23,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.project.proyectointermodularapp.domain.model.ViewerSession
+import com.project.proyectointermodularapp.ui.theme.AlmosWhite
 import com.project.proyectointermodularapp.ui.theme.Grey
 import com.project.proyectointermodularapp.ui.theme.Red
 
@@ -35,9 +39,40 @@ private data class CompanyRequestUiModel(
 @Composable
 fun InboxScreen(
     modifier: Modifier = Modifier,
+    onNavigateToLogin: () -> Unit = {},
     viewModel: RequestViewModel = viewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
+
+    if (uiState.viewerSession == ViewerSession.Invitado) {
+        Box(
+            modifier = modifier
+                .fillMaxSize()
+                .padding(24.dp),
+            contentAlignment = Alignment.Center
+        ) {
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.spacedBy(16.dp)
+            ) {
+                Text(
+                    text = "Debes iniciar sesion para ver las solicitudes de empresa.",
+                    style = MaterialTheme.typography.headlineSmall,
+                    color = Grey
+                )
+                Button(
+                    onClick = onNavigateToLogin,
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Red,
+                        contentColor = AlmosWhite
+                    )
+                ) {
+                    Text("Iniciar sesion")
+                }
+            }
+        }
+        return
+    }
 
     val companyRequests = uiState.requests.flatMap { request ->
         request.responses.mapIndexed { index, response ->

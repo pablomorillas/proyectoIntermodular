@@ -6,4 +6,6 @@ import proyecto.intermodular.requestructure_api.domain.Empresa;
 public interface EmpresaRepository extends JpaRepository<Empresa, Long> {
     boolean existsByEmail(String email);
     boolean existsByNif(String nif);
+
+    Optional<Empresa> findByNif(String nif);
 }

@@ -308,6 +308,12 @@ fun MainScreen(
                         onRequestClick = { requestId ->
                             navController.navigate(AppScreen.createRequestDetailRoute(requestId))
                         },
+                        onNavigateToLogin = {
+                            postLoginRoute = AppScreen.MyRequests.name
+                            navController.navigate(AppScreen.Login.name) {
+                                launchSingleTop = true
+                            }
+                        },
                         viewModel = requestViewModel
                     )
                 }
@@ -325,7 +331,15 @@ fun MainScreen(
                         }
                     )
                 } else {
-                    InboxScreen(viewModel = requestViewModel)
+                    InboxScreen(
+                        viewModel = requestViewModel,
+                        onNavigateToLogin = {
+                            postLoginRoute = AppScreen.CompanyRequests.name
+                            navController.navigate(AppScreen.Login.name) {
+                                launchSingleTop = true
+                            }
+                        }
+                    )
                 }
             }
 

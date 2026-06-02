@@ -23,6 +23,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import com.project.proyectointermodularapp.domain.model.CommentModel
+import com.project.proyectointermodularapp.ui.theme.ProyectoIntermodularAppTheme
 
 @Composable
 fun RequestCard(
@@ -89,11 +90,13 @@ fun RequestCard(
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun RequestCardPreview() {
-    RequestCard(
-        title = "Titulo de la solicitud",
-        content = "Contenido de la solicitud",
-        author = "Autor",
-        date = "Fecha",
-        imageUrl = "https://ejemplo.com/imagen.jpg"
-    )
+    ProyectoIntermodularAppTheme {
+        RequestCard(
+            title = "Titulo de la solicitud",
+            content = "Contenido de la solicitud",
+            author = "Autor",
+            date = "Fecha",
+            imageUrl = "https://ejemplo.com/imagen.jpg"
+        )
+    }
 }

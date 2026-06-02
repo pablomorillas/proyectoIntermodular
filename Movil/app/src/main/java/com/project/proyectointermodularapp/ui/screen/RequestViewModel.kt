@@ -178,6 +178,84 @@ class RequestViewModel(
         return AddRequestCommentResult.SUCCESS
     }
 
+    fun addReplyToComment(
+        requestId: Int,
+        parentCommentId: Int,
+        commentText: String
+    ): AddRequestCommentResult {
+        val normalizedComment = commentText.trim()
+        if (normalizedComment.isEmpty()) {
+            return AddRequestCommentResult.EMPTY_CONTENT
+        }
+
+        val viewerSession = _uiState.value.viewerSession
+        if (viewerSession == ViewerSession.Invitado) {
+            return AddRequestCommentResult.REQUIRE_LOGIN
+        }
+
+        val requestExists = solicitudesCache.any { it.id == requestId }
+        if (!requestExists) {
+            return AddRequestCommentResult.REQUEST_NOT_FOUND
+        }
+
+        val author = when (viewerSession) {
+            is ViewerSession.Cliente -> clientesCache
+                .firstOrNull { it.id == viewerSession.id }
+                ?.username
+                ?: "cliente-${viewerSession.id}"
+
+            is ViewerSession.Empresa -> empresasCache
+                .firstOrNull { it.id == viewerSession.id }
+                ?.nombre
+                ?: "empresa-${viewerSession.id}"
+
+            ViewerSession.Invitado -> return AddRequestCommentResult.REQUIRE_LOGIN
+        }
+
+        val currentMaxCommentId = solicitudesCache
+            .flatMap { solicitud -> flattenSolicitudComments(solicitud.comentarios) }
+            .maxOfOrNull { comment -> comment.id }
+            ?: 0
+
+        val newComment = ComentarioSolicitudModel(
+            id = currentMaxCommentId + 1,
+            solicitudId = requestId,
+            autor = author,
+            contenido = normalizedComment,
+            fechaHora = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault()).format(Date()),
+            respuestas = emptyList()
+        )
+
+        solicitudesCache = solicitudesCache.map { solicitud ->
+            if (solicitud.id == requestId) {
+                solicitud.copy(
+                    comentarios = addReplyToCommentsRecursive(solicitud.comentarios, parentCommentId, newComment)
+                )
+            } else {
+                solicitud
+            }
+        }
+
+        rebuildUiStateFromCache()
+        return AddRequestCommentResult.SUCCESS
+    }
+
+    private fun addReplyToCommentsRecursive(
+        comments: List<ComentarioSolicitudModel>,
+        parentCommentId: Int,
+        newComment: ComentarioSolicitudModel
+    ): List<ComentarioSolicitudModel> {
+        return comments.map { comment ->
+            if (comment.id == parentCommentId) {
+                comment.copy(respuestas = comment.respuestas + newComment)
+            } else {
+                comment.copy(
+                    respuestas = addReplyToCommentsRecursive(comment.respuestas, parentCommentId, newComment)
+                )
+            }
+        }
+    }
+
     private fun loadDomainData() {
         viewModelScope.launch {
             try {
