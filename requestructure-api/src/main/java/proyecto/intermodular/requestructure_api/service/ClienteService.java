@@ -6,6 +6,8 @@ import proyecto.intermodular.requestructure_api.api.dto.request.UpdateClienteReq
 import proyecto.intermodular.requestructure_api.config.PasswordHasher;
 import proyecto.intermodular.requestructure_api.domain.Cliente;
 import proyecto.intermodular.requestructure_api.repository.ClienteRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,6 +17,8 @@ import java.util.List;
 
 @Service
 public class ClienteService {
+
+    private static final Logger logger = LoggerFactory.getLogger(ClienteService.class);
 
     private final ClienteRepository clienteRepository;
 
@@ -97,9 +101,17 @@ public class ClienteService {
 
     @Transactional(readOnly = true)
     public ClienteDto login(String email, String password) {
-        Cliente cliente = clienteRepository.findByEmail(email.trim().toLowerCase())
+        String normalizedEmail = email.trim().toLowerCase();
+        logger.info("Login attempt for email: {}", normalizedEmail);
+        Cliente cliente = clienteRepository.findByEmail(normalizedEmail)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Credenciales incorrectas"));
-        if (!PasswordHasher.matches(password, cliente.getPassword())) {
+        String storedHash = cliente.getPassword();
+        boolean matches = PasswordHasher.matches(password, storedHash);
+        logger.info("Login hash check for {}: rawLen={}, storedHashPrefix={}, matches={}",
+                normalizedEmail, password.length(),
+                storedHash != null ? storedHash.substring(0, Math.min(10, storedHash.length())) : "null",
+                matches);
+        if (!matches) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Credenciales incorrectas");
         }
         return toDto(cliente);
