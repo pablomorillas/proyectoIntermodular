@@ -6,7 +6,6 @@ on:
     paths:
       - 'requestructure-api/**'
       - '.github/workflows/build-api.yml'
-      - 'Dockerfile'
 
 jobs:
   build:
