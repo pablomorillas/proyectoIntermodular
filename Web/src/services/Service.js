@@ -96,6 +96,15 @@ export const createCliente = async (data) => {
   }
 };
 
+export const deleteSolicitud = async (id) => {
+  try {
+    await axios.delete(`${API_URL}/solicitudes/${id}`);
+  } catch (error) {
+    console.error(`Error al eliminar la solicitud ${id}:`, error);
+    throw new Error(error.response?.data?.message || "No se pudo eliminar la solicitud.");
+  }
+};
+
 export const createComentarioSolicitud = async (solicitudId, data) => {
   try {
     const res = await axios.post(`${API_URL}/solicitudes/${solicitudId}/comentarios`, data);

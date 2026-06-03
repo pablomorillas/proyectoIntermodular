@@ -1,11 +1,12 @@
 import { useState } from "react";
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, useNavigate } from "react-router-dom";
 import { useSolicitud } from "../hook/useSolicitud";
 import { useAuth } from "../context/AuthContext.jsx";
-import { createComentarioSolicitud } from "../services/Service";
+import { createComentarioSolicitud, deleteSolicitud } from "../services/Service";
 
 function SolicitudDetail() {
   const { id } = useParams();
+  const navigate = useNavigate();
   const { data: solicitud, loading, error, refetch } = useSolicitud(id);
   const { user, isGuest } = useAuth();
 
@@ -81,6 +82,26 @@ function SolicitudDetail() {
         <p style={{ margin: "4px 0 0", fontSize: "0.75rem", color: "#888" }}>
           {new Date(comentario.fechaHora).toLocaleString()}
         </p>
+
+        {!isGuest && user?.username === comentario.autor && (
+          <button
+            type="button"
+            onClick={() => alert("Funcionalidad de eliminar comentario pendiente de implementar en backend.")}
+            style={{
+              marginTop: 6,
+              marginRight: 12,
+              background: "none",
+              border: "none",
+              color: "var(--color-error)",
+              cursor: "pointer",
+              fontSize: "0.85rem",
+              fontWeight: 700,
+              padding: 0,
+            }}
+          >
+            Eliminar
+          </button>
+        )}
 
         {!isGuest && replyingTo !== comentario.id && (
           <button
@@ -168,6 +189,36 @@ function SolicitudDetail() {
             <p><strong>Estado:</strong> {solicitud.estado || "Desconocido"}</p>
             <p><strong>Visibilidad:</strong> {solicitud.privada ? "Privada (solo tu y las empresas)" : "Publica"}</p>
           </div>
+
+          {user && solicitud.clienteId === user.id && (
+            <div style={{ marginTop: 12 }}>
+              <button
+                type="button"
+                onClick={async () => {
+                  if (window.confirm("¿Seguro que quieres eliminar esta solicitud? Esta accion no se puede deshacer.")) {
+                    try {
+                      await deleteSolicitud(solicitud.id);
+                      navigate("/solicitudes");
+                    } catch (err) {
+                      alert(err.message || "No se pudo eliminar la solicitud.");
+                    }
+                  }
+                }}
+                style={{
+                  background: "var(--color-error)",
+                  color: "#fff",
+                  border: "none",
+                  borderRadius: 6,
+                  padding: "8px 16px",
+                  cursor: "pointer",
+                  fontWeight: 700,
+                  fontSize: "0.9rem",
+                }}
+              >
+                Eliminar solicitud
+              </button>
+            </div>
+          )}
 
           <p className="card-simple-description" style={{ marginTop: 16 }}>
             {solicitud.contenido}
