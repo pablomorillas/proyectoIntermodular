@@ -190,7 +190,7 @@ function SolicitudDetail() {
             <p><strong>Visibilidad:</strong> {solicitud.privada ? "Privada (solo tu y las empresas)" : "Publica"}</p>
           </div>
 
-          {user && solicitud.clienteId === user.id && (
+          {user && (user.id == solicitud.clienteId || user.username === solicitud.clienteUsername) && (
             <div style={{ marginTop: 12 }}>
               <button
                 type="button"
