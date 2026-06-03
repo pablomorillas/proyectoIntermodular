@@ -25,6 +25,10 @@ jobs:
           java-version: '21'
           distribution: 'temurin'
 
+      - name: Make gradlew executable
+        working-directory: ./requestructure-api
+        run: chmod +x gradlew
+
       - name: Build JAR
         working-directory: ./requestructure-api
         run: ./gradlew build -x test --no-daemon
