@@ -20,6 +20,9 @@ interface RequestructureApiService {
     @GET("solicitudes")
     suspend fun getSolicitudes(): List<SolicitudDto>
 
+    @POST("solicitudes")
+    suspend fun createSolicitud(@Body request: CreateSolicitudRequestDto): SolicitudDto
+
     @GET("respuestas")
     suspend fun getRespuestas(): List<RespuestaDto>
 }

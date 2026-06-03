@@ -1,6 +1,7 @@
 package com.project.proyectointermodularapp.data.repository
 
 import com.project.proyectointermodularapp.data.network.CreateClienteRequestDto
+import com.project.proyectointermodularapp.data.network.CreateSolicitudRequestDto
 import com.project.proyectointermodularapp.data.network.LoginRequestDto
 import com.project.proyectointermodularapp.data.network.RequestructureApiService
 import com.project.proyectointermodularapp.domain.model.ClienteModel
@@ -46,6 +47,29 @@ class NetworkRequestRepository(
 
     override suspend fun getSolicitudes(): List<SolicitudModel> {
         return apiService.getSolicitudes().map { it.toDomain() }
+    }
+
+    override suspend fun createSolicitud(
+        clienteId: Int,
+        titulo: String,
+        contenido: String,
+        imagenes: List<String>,
+        privada: Boolean
+    ): SolicitudModel? {
+        return try {
+            apiService.createSolicitud(
+                CreateSolicitudRequestDto(
+                    clienteId = clienteId,
+                    titulo = titulo.trim(),
+                    contenido = contenido.trim(),
+                    imagenes = imagenes,
+                    privada = privada
+                )
+            ).toDomain()
+        } catch (e: Exception) {
+            android.util.Log.e("NetworkRepo", "Create solicitud failed: ${e.message}")
+            null
+        }
     }
 
     override suspend fun getRespuestas(): List<RespuestaModel> {

@@ -2,7 +2,6 @@ package com.project.proyectointermodularapp.data
 
 import com.project.proyectointermodularapp.BuildConfig
 import com.project.proyectointermodularapp.data.network.RequestructureApiService
-import com.project.proyectointermodularapp.data.repository.FakeRequestRepository
 import com.project.proyectointermodularapp.data.repository.NetworkRequestRepository
 import com.project.proyectointermodularapp.data.repository.RequestRepository
 import com.project.proyectointermodularapp.data.repository.ResilientRequestRepository
@@ -43,8 +42,7 @@ class DefaultAppContainer : AppContainer {
 
     override val requestRepository: RequestRepository by lazy {
         ResilientRequestRepository(
-            remoteRepository = NetworkRequestRepository(apiService),
-            fallbackRepository = FakeRequestRepository()
+            repository = NetworkRequestRepository(apiService)
         )
     }
 }

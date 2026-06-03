@@ -11,6 +11,7 @@ interface RequestRepository {
     suspend fun register(username: String, email: String, password: String, direccion: String): ClienteModel?
     suspend fun getEmpresas(): List<EmpresaModel>
     suspend fun getSolicitudes(): List<SolicitudModel>
+    suspend fun createSolicitud(clienteId: Int, titulo: String, contenido: String, imagenes: List<String>, privada: Boolean): SolicitudModel?
     suspend fun getRespuestas(): List<RespuestaModel>
 }
 

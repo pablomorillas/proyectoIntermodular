@@ -7,7 +7,6 @@ import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.project.proyectointermodularapp.ProyectoIntermodularApplication
-import com.project.proyectointermodularapp.data.repository.FakeRequestRepository
 import com.project.proyectointermodularapp.data.repository.RequestRepository
 import com.project.proyectointermodularapp.domain.model.RequestModel
 import com.project.proyectointermodularapp.domain.model.ClienteModel
@@ -33,7 +32,7 @@ enum class AddRequestCommentResult {
 }
 
 class RequestViewModel(
-    private val repository: RequestRepository = FakeRequestRepository()
+    private val repository: RequestRepository
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(RequestUiState(isLoading = true))
@@ -75,7 +74,7 @@ class RequestViewModel(
         }
     }
 
-    fun createRequest(
+    suspend fun createRequest(
         title: String,
         content: String,
         isPrivate: Boolean,
@@ -89,34 +88,31 @@ class RequestViewModel(
             return false
         }
 
-        val newRequestId = (solicitudesCache.maxOfOrNull { it.id } ?: 0) + 1
-        val fallbackImage = "https://picsum.photos/seed/request-$newRequestId/800/450"
-        val normalizedImage = imageUrl?.trim().orEmpty()
-        val finalImage = if (normalizedImage.isEmpty()) fallbackImage else normalizedImage
-        val now = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault()).format(Date())
+        _uiState.value = _uiState.value.copy(isLoading = true)
 
-        val newRequest = SolicitudModel(
-            id = newRequestId,
+        val normalizedImage = imageUrl?.trim().orEmpty()
+        val finalImage = if (normalizedImage.isEmpty()) {
+            "https://picsum.photos/seed/request-${System.currentTimeMillis()}/800/450"
+        } else normalizedImage
+
+        val created = repository.createSolicitud(
             clienteId = currentClientId,
             titulo = normalizedTitle,
             contenido = normalizedContent,
-            fechaHora = now,
             imagenes = listOf(finalImage),
-            privada = isPrivate,
-            comentarios = emptyList()
+            privada = isPrivate
         )
 
-        solicitudesCache = solicitudesCache + newRequest
-        clientesCache = clientesCache.map { client ->
-            if (client.id == currentClientId) {
-                client.copy(solicitudesIds = client.solicitudesIds + newRequestId)
-            } else {
-                client
-            }
+        return if (created != null) {
+            loadDomainData()
+            true
+        } else {
+            _uiState.value = _uiState.value.copy(
+                isLoading = false,
+                error = "No se pudo crear la solicitud. Comprueba tu conexion."
+            )
+            false
         }
-
-        rebuildUiStateFromCache()
-        return true
     }
 
     fun addCommentToRequest(

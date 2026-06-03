@@ -30,6 +30,15 @@ data class CreateClienteRequestDto(
 )
 
 @Serializable
+data class CreateSolicitudRequestDto(
+    @SerialName("clienteId") val clienteId: Int,
+    @SerialName("titulo") val titulo: String,
+    @SerialName("contenido") val contenido: String,
+    @SerialName("imagenes") val imagenes: List<String>,
+    @SerialName("privada") val privada: Boolean
+)
+
+@Serializable
 data class ClienteDto(
     @SerialName("id") val id: Int = 0,
     @SerialName("username") val username: String = "",

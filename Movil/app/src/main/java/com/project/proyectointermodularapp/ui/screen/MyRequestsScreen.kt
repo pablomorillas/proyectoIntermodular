@@ -22,7 +22,9 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import kotlinx.coroutines.launch
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -40,6 +42,7 @@ fun MyRequestsScreen(
     viewModel: RequestViewModel = viewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
+    val coroutineScope = rememberCoroutineScope()
 
     if (uiState.viewerSession == ViewerSession.Invitado) {
         Box(
@@ -145,26 +148,29 @@ fun MyRequestsScreen(
 
                     Button(
                         onClick = {
-                            val created = viewModel.createRequest(
-                                title = title,
-                                content = content,
-                                isPrivate = isPrivate,
-                                imageUrl = imageUrl
-                            )
+                            coroutineScope.launch {
+                                val created = viewModel.createRequest(
+                                    title = title,
+                                    content = content,
+                                    isPrivate = isPrivate,
+                                    imageUrl = imageUrl
+                                )
 
-                            formMessage = if (created) {
-                                title = ""
-                                content = ""
-                                imageUrl = ""
-                                isPrivate = false
-                                "Solicitud creada correctamente."
-                            } else {
-                                "Completa titulo y contenido para crear la solicitud."
+                                formMessage = if (created) {
+                                    title = ""
+                                    content = ""
+                                    imageUrl = ""
+                                    isPrivate = false
+                                    "Solicitud creada correctamente."
+                                } else {
+                                    "No se pudo crear la solicitud. Intenta de nuevo."
+                                }
                             }
                         },
-                        modifier = Modifier.fillMaxWidth()
+                        modifier = Modifier.fillMaxWidth(),
+                        enabled = !uiState.isLoading
                     ) {
-                        Text("Publicar solicitud")
+                        Text(if (uiState.isLoading) "Publicando..." else "Publicar solicitud")
                     }
 
                     formMessage?.let {
