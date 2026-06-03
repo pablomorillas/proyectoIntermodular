@@ -24,10 +24,17 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -35,6 +42,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -42,14 +50,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil3.compose.AsyncImage
-import com.project.proyectointermodularapp.R
 import com.project.proyectointermodularapp.domain.model.RequestModel
+import com.project.proyectointermodularapp.domain.model.ViewerSession
 import com.project.proyectointermodularapp.ui.theme.AlmosWhite
 import com.project.proyectointermodularapp.ui.theme.Grey
 import com.project.proyectointermodularapp.ui.theme.Red
@@ -57,6 +64,7 @@ import com.project.proyectointermodularapp.ui.theme.Red
 @Composable
 fun HomeScreen(
     onRequestClick: (Int) -> Unit = {},
+    onLogoutClick: () -> Unit = {},
     viewModel: RequestViewModel = viewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
@@ -132,7 +140,10 @@ fun HomeScreen(
                                     Text("Actualizar")
                                 }
 
-                                ProfileAvatarPlaceholder()
+                                ProfileAvatarWithMenu(
+                                    viewerSession = uiState.viewerSession,
+                                    onLogoutClick = onLogoutClick
+                                )
                             }
                         }
                     }
@@ -181,20 +192,41 @@ fun HomeScreen(
 }
 
 @Composable
-private fun ProfileAvatarPlaceholder() {
-    Box(
-        modifier = Modifier
-            .size(42.dp)
-            .clip(CircleShape)
-            .background(MaterialTheme.colorScheme.surfaceVariant)
-            .border(1.dp, Grey, CircleShape),
-        contentAlignment = Alignment.Center
-    ) {
-        Image(
-            painter = painterResource(id = R.drawable.article_person),
-            contentDescription = "Foto de perfil",
-            modifier = Modifier.size(22.dp)
-        )
+private fun ProfileAvatarWithMenu(
+    viewerSession: ViewerSession,
+    onLogoutClick: () -> Unit
+) {
+    var expanded by remember { mutableStateOf(false) }
+
+    Box {
+        IconButton(onClick = { expanded = true }) {
+            Icon(
+                imageVector = Icons.Filled.Person,
+                contentDescription = "Perfil",
+                tint = Red,
+                modifier = Modifier.size(32.dp)
+            )
+        }
+
+        DropdownMenu(
+            expanded = expanded,
+            onDismissRequest = { expanded = false }
+        ) {
+            if (viewerSession != ViewerSession.Invitado) {
+                DropdownMenuItem(
+                    text = { Text("Cerrar sesion") },
+                    onClick = {
+                        expanded = false
+                        onLogoutClick()
+                    }
+                )
+            } else {
+                DropdownMenuItem(
+                    text = { Text("Invitado") },
+                    onClick = { expanded = false }
+                )
+            }
+        }
     }
 }
 

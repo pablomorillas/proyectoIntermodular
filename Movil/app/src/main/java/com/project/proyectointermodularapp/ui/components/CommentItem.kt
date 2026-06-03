@@ -29,7 +29,9 @@ fun CommentItem(
     onReplyTextChange: (String) -> Unit = {},
     onStartReply: (Int) -> Unit = {},
     onCancelReply: () -> Unit = {},
-    onPublishReply: (Int) -> Unit = {}
+    onPublishReply: (Int) -> Unit = {},
+    currentUserName: String = "",
+    onDeleteComment: (Int) -> Unit = {}
 ) {
     Column(
         modifier = Modifier.padding(start = (indent * 16).dp)
@@ -44,13 +46,23 @@ fun CommentItem(
         Text(text = comment.message)
         Spacer(modifier = Modifier.height(4.dp))
 
-        if (canReply && replyingToCommentId != comment.id) {
-            Text(
-                text = "Responder",
-                style = MaterialTheme.typography.labelSmall,
-                color = MaterialTheme.colorScheme.primary,
-                modifier = Modifier.clickable { onStartReply(comment.id) }
-            )
+        Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+            if (canReply && replyingToCommentId != comment.id) {
+                Text(
+                    text = "Responder",
+                    style = MaterialTheme.typography.labelSmall,
+                    color = MaterialTheme.colorScheme.primary,
+                    modifier = Modifier.clickable { onStartReply(comment.id) }
+                )
+            }
+            if (currentUserName.isNotBlank() && comment.author == currentUserName) {
+                Text(
+                    text = "Eliminar",
+                    style = MaterialTheme.typography.labelSmall,
+                    color = MaterialTheme.colorScheme.error,
+                    modifier = Modifier.clickable { onDeleteComment(comment.id) }
+                )
+            }
         }
 
         if (replyingToCommentId == comment.id) {
@@ -93,7 +105,9 @@ fun CommentItem(
                 onReplyTextChange = onReplyTextChange,
                 onStartReply = onStartReply,
                 onCancelReply = onCancelReply,
-                onPublishReply = onPublishReply
+                onPublishReply = onPublishReply,
+                currentUserName = currentUserName,
+                onDeleteComment = onDeleteComment
             )
         }
     }

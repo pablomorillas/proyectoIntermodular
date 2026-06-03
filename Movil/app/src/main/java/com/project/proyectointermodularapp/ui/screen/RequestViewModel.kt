@@ -361,6 +361,32 @@ class RequestViewModel(
         }
     }
 
+    fun deleteRequest(requestId: Int) {
+        solicitudesCache = solicitudesCache.filter { it.id != requestId }
+        rebuildUiStateFromCache()
+    }
+
+    fun deleteComment(requestId: Int, commentId: Int) {
+        solicitudesCache = solicitudesCache.map { solicitud ->
+            if (solicitud.id == requestId) {
+                solicitud.copy(
+                    comentarios = removeCommentRecursive(solicitud.comentarios, commentId)
+                )
+            } else {
+                solicitud
+            }
+        }
+        rebuildUiStateFromCache()
+    }
+
+    private fun removeCommentRecursive(
+        comments: List<ComentarioSolicitudModel>,
+        commentId: Int
+    ): List<ComentarioSolicitudModel> {
+        return comments.filter { it.id != commentId }
+            .map { it.copy(respuestas = removeCommentRecursive(it.respuestas, commentId)) }
+    }
+
     private fun SolicitudModel.toRequestModel(
         clientes: List<ClienteModel>,
         empresas: List<EmpresaModel>,

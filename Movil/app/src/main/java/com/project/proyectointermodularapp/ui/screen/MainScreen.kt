@@ -275,6 +275,13 @@ fun MainScreen(
                     onRequestClick = { requestId ->
                         navController.navigate(AppScreen.createRequestDetailRoute(requestId))
                     },
+                    onLogoutClick = {
+                        requestViewModel.setViewerSession(ViewerSession.Invitado)
+                        navController.navigate(AppScreen.Login.name) {
+                            popUpTo(AppScreen.Home.name) { inclusive = true }
+                            launchSingleTop = true
+                        }
+                    },
                     viewModel = requestViewModel
                 )
             }
@@ -362,6 +369,9 @@ fun MainScreen(
                             popUpTo(AppScreen.Login.name) { inclusive = true }
                             launchSingleTop = true
                         }
+                    },
+                    onRequestDeleted = {
+                        navController.popBackStack()
                     },
                     viewModel = requestViewModel
                 )

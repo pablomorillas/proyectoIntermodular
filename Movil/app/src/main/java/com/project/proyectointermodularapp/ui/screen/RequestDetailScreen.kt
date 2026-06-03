@@ -32,6 +32,7 @@ import com.project.proyectointermodularapp.ui.theme.Red
 fun RequestDetailScreen(
     requestId: Int,
     onNavigateToLogin: () -> Unit,
+    onRequestDeleted: () -> Unit,
     viewModel: RequestViewModel = viewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
@@ -39,8 +40,20 @@ fun RequestDetailScreen(
 
     var commentText by rememberSaveable(requestId) { mutableStateOf("") }
     var showLoginDialog by remember { mutableStateOf(false) }
+    var showDeleteDialog by remember { mutableStateOf(false) }
     var replyingToCommentId by rememberSaveable(requestId) { mutableStateOf<Int?>(null) }
     var replyText by rememberSaveable(requestId) { mutableStateOf("") }
+
+    val request = uiState.requests.find { it.id == requestId }
+    val currentUserName = when (val viewer = uiState.viewerSession) {
+        is ViewerSession.Cliente -> uiState.clientes.find { it.id == viewer.id }?.username ?: ""
+        else -> ""
+    }
+    val solicitudOriginal = uiState.solicitudesVisibles.find { it.id == requestId }
+    val viewerId = (uiState.viewerSession as? ViewerSession.Cliente)?.id
+    val canDeleteRequest = solicitudOriginal != null &&
+            viewerId != null &&
+            solicitudOriginal.clienteId == viewerId
 
     when {
         uiState.isLoading -> {
@@ -158,6 +171,17 @@ fun RequestDetailScreen(
                                 ).show()
                             }
                         }
+                    },
+                    canDeleteRequest = canDeleteRequest,
+                    onDeleteRequest = { showDeleteDialog = true },
+                    currentUserName = currentUserName,
+                    onDeleteComment = { commentId ->
+                        viewModel.deleteComment(requestId, commentId)
+                        Toast.makeText(
+                            context,
+                            "Comentario eliminado.",
+                            Toast.LENGTH_SHORT
+                        ).show()
                     }
                 )
             }
@@ -194,6 +218,41 @@ fun RequestDetailScreen(
                     )
                 ) {
                     Text("Mas tarde")
+                }
+            }
+        )
+    }
+
+    if (showDeleteDialog && request != null) {
+        AlertDialog(
+            onDismissRequest = { showDeleteDialog = false },
+            title = { Text("Eliminar solicitud") },
+            text = { Text("¿Seguro que quieres eliminar esta solicitud? Esta accion no se puede deshacer.") },
+            confirmButton = {
+                Button(
+                    onClick = {
+                        showDeleteDialog = false
+                        viewModel.deleteRequest(requestId)
+                        Toast.makeText(context, "Solicitud eliminada.", Toast.LENGTH_SHORT).show()
+                        onRequestDeleted()
+                    },
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Red,
+                        contentColor = AlmosWhite
+                    )
+                ) {
+                    Text("Eliminar")
+                }
+            },
+            dismissButton = {
+                Button(
+                    onClick = { showDeleteDialog = false },
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Grey,
+                        contentColor = AlmosWhite
+                    )
+                ) {
+                    Text("Cancelar")
                 }
             }
         )
