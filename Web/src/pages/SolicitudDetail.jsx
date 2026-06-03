@@ -205,7 +205,7 @@ function SolicitudDetail() {
                   }
                 }}
                 style={{
-                  background: "var(--color-error)",
+                  background: "var(--color-primary)",
                   color: "#fff",
                   border: "none",
                   borderRadius: 6,
