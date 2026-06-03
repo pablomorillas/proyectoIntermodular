@@ -112,8 +112,13 @@ fun MainScreen(
     val previousScreen = previousRouteName
         ?.let { runCatching { AppScreen.valueOf(it) }.getOrNull() }
 
-    val canNavigateBack = currentScreen == AppScreen.Register ||
-        currentScreen == AppScreen.RequestDetail
+    val canNavigateBack = navController.previousBackStackEntry != null &&
+        currentScreen !in setOf(
+            AppScreen.Home,
+            AppScreen.Requests,
+            AppScreen.MyRequests,
+            AppScreen.CompanyRequests
+        )
 
     val showBottomBar = currentScreen in setOf(
         AppScreen.Home,
